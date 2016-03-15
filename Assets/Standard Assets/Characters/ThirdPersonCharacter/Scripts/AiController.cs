@@ -7,6 +7,8 @@ public class AiController : MonoBehaviour {
 
     bool dead = false;
     public int HP = 100;
+    //int chase = 1;
+
 	// Use this for initialization
 	void Start () {
 
