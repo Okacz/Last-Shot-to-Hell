@@ -3,14 +3,15 @@ using UnityEngine;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
-    [RequireComponent(typeof (NavMeshAgent))]
-    [RequireComponent(typeof (ThirdPersonCharacter))]
+    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(ThirdPersonCharacter))]
+    [RequireComponent(typeof(Animator))]
     public class AICharacterControl : MonoBehaviour
     {
         public NavMeshAgent agent { get; private set; } // the navmesh agent required for the path finding
         public ThirdPersonCharacter character { get; private set; } // the character we are controlling
         public Transform target; // target to aim for
-
+        Animator m_Animator;
         // Use this for initialization
         private void Start()
         {
@@ -20,18 +21,29 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 	        agent.updateRotation = false;
 	        agent.updatePosition = true;
+
+            
         }
 
 
         // Update is called once per frame
         private void Update()
         {
+            
+          
             if (target != null)
             {
                 agent.SetDestination(target.position);
 
-				
-				
+                
+                /*AiController Script = character.GetComponent<AiController>();
+                if (Script.HP >= 0)
+                {*/
+                    //transform.LookAt(target);
+                /*}*/
+
+                //m_Animator.SetFloat("Forward", 0, 0.1f, Time.deltaTime);
+
                 // use the values to move the character
                 character.Move(agent.desiredVelocity, false, false);
             }

@@ -4,7 +4,7 @@ using System.Collections;
 public class AiController : MonoBehaviour {
 
 
-
+    public Transform target;
     bool dead = false;
     public int HP = 100;
     //int chase = 1;
@@ -22,10 +22,13 @@ public class AiController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+        if (HP >= 0)
+        {
+            transform.LookAt(target);
+        }
 
-        
-	}
+
+    }
     void OnTriggerEnter(Collider a)
     {
         if(a.tag=="Bullet")
@@ -99,5 +102,9 @@ public class AiController : MonoBehaviour {
             b.freezeRotation = true;
         }
         print("stop");
+    }
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
     }
 }
