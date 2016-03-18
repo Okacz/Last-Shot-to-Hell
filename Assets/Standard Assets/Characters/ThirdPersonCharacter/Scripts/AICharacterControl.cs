@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
@@ -11,14 +12,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         public NavMeshAgent agent { get; private set; } // the navmesh agent required for the path finding
         public ThirdPersonCharacter character { get; private set; } // the character we are controlling
         public Transform target; // target to aim for
+        AiController controller;
         Animator m_Animator;
+        bool stop = true;
         // Use this for initialization
         private void Start()
         {
             // get the components on the object we need ( should not be null due to require component so no need to check )
             agent = GetComponentInChildren<NavMeshAgent>();
             character = GetComponent<ThirdPersonCharacter>();
-
+            controller = GetComponent<AiController>();
 	        agent.updateRotation = false;
 	        agent.updatePosition = true;
 
@@ -35,9 +38,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 agent.SetDestination(target.position);
 
-                
+                if(controller.HP>0)
+                {
+                    transform.LookAt(target);
+
+                }
+                UpdateAnimator();
                 /*AiController Script = character.GetComponent<AiController>();
-                if (Script.HP >= 0)
+                if (controller.HP > 0)
                 {*/
                     //transform.LookAt(target);
                 /*}*/
@@ -45,7 +53,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 //m_Animator.SetFloat("Forward", 0, 0.1f, Time.deltaTime);
 
                 // use the values to move the character
-                character.Move(agent.desiredVelocity, false, false);
+                /*character.Move(agent.desiredVelocity, false, false);*/
             }
             else
             {
@@ -54,11 +62,38 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             }
 
         }
+        public void UpdateAnimator()
+        {
 
+            if (agent.remainingDistance > 1.8)
+            {
+                if (stop == true)
+                {
 
+                    print("Pozycja: " + agent.remainingDistance);
+                    StartCoroutine(wait());
+                    GetComponent<Animator>().SetFloat("Forward", 1);
+                    GetComponent<Animator>().SetBool("IsPunching", false);
+                }
+            }
+            else
+            {
+                GetComponent<Animator>().SetFloat("Forward", 0);
+                GetComponent<Animator>().SetBool("IsPunching", true);
+            }
+           
+            
+        }
+       
         public void SetTarget(Transform target)
         {
             this.target = target;
+        }
+        IEnumerator wait()
+        {
+            stop = false;
+            yield return new WaitForSeconds(1);
+            stop = true;
         }
     }
 }

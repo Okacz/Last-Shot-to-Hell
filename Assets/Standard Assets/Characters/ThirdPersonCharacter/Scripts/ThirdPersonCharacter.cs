@@ -137,6 +137,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     Quaternion interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
                     transform.rotation = interpolatedRotation;
                 }
+                if(cameraRayHit.transform.tag=="Enemy")
+                {
+
+                    Vector3 targetPosition = cameraRayHit.transform.position;
+                    //transform.LookAt(targetPosition);
+                    Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
+
+                    Quaternion interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                    transform.rotation = interpolatedRotation;
+                }
             }
         }
         void BangEnded()
@@ -237,7 +247,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
-            print("ruch" + move);
 			if (move.magnitude > 1f) move.Normalize();
 			move = transform.InverseTransformDirection(move);
             

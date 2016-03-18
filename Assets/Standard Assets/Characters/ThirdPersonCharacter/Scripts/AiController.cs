@@ -22,10 +22,7 @@ public class AiController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (HP >= 0)
-        {
-            transform.LookAt(target);
-        }
+       
 
 
     }
@@ -48,6 +45,7 @@ public class AiController : MonoBehaviour {
                 
                 GetComponent<Animator>().enabled = false;
                 GetComponent<NavMeshAgent>().enabled = false;
+                
                 foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
                 {
                     b.freezeRotation = false;
@@ -65,7 +63,7 @@ public class AiController : MonoBehaviour {
             
             
         }
-        if(a.tag=="Cactus")
+        /*if(a.tag=="Cactus")
         {
             print("walnął w kaktusa");
             if(dead)
@@ -89,7 +87,7 @@ public class AiController : MonoBehaviour {
                 }
                 
             }
-        }
+        }*/
     }
     IEnumerator Wait (float duration)
     {
