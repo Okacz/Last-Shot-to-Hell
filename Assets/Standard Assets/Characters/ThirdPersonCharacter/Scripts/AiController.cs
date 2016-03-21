@@ -38,7 +38,6 @@ public class AiController : MonoBehaviour {
                 Quaternion neededRotation = Quaternion.LookRotation(a.transform.position - b.transform.position);
                 b.transform.rotation = a.transform.rotation * Quaternion.Euler(90, 0, 0);
                 b.Play();
-                print("B " + b.transform.rotation);
             }
             if(!dead&&HP<=0)
             {
@@ -50,14 +49,24 @@ public class AiController : MonoBehaviour {
                 {
                     b.freezeRotation = false;
                     b.isKinematic = false ;
+                    if(b.name=="Spine1")
+                    {
+                        b.GetComponent<Rigidbody>().AddForce((a.transform.up + new Vector3(0, 0.5f, 0)) * a.GetComponent<Rigidbody>().mass * 30);
+                    }
+                   
                 }
-                GetComponent<Rigidbody>().AddForce((a.transform.up+new Vector3(0, 0.5f, 0))*a.GetComponent<Rigidbody>().mass*30);
+                GetComponent<Rigidbody>().freezeRotation = true;
+                foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
+                {
+                    b.enableProjection = true;
+
+                }
                
                 
                 
                 
                 dead = true;
-                StartCoroutine(Wait(3));
+                //StartCoroutine(Wait(3));
                 
             }
             
