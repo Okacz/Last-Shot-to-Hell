@@ -127,24 +127,27 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             RaycastHit cameraRayHit;
             if (Physics.Raycast(ray, out cameraRayHit))
             {
-                
-                if (cameraRayHit.transform.tag == "Ground")
+                Quaternion interpolatedRotation=new Quaternion(0, 0, 0, 0);
+                if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (shotgun)") || this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (rifle)"))
                 {
                     Vector3 targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
-                    //transform.LookAt(targetPosition);
                     Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
-
-                    Quaternion interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                    neededRotation *= Quaternion.Euler(0, 50, 0);
+                    interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                    
+                }
+                else
+                {
+                    Vector3 targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
+                    Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
+                    interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                }
+                if (cameraRayHit.transform.tag == "Ground")
+                {                   
                     transform.rotation = interpolatedRotation;
                 }
                 if(cameraRayHit.transform.tag=="Enemy")
                 {
-
-                    Vector3 targetPosition = cameraRayHit.transform.position;
-                    //transform.LookAt(targetPosition);
-                    Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
-
-                    Quaternion interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
                     transform.rotation = interpolatedRotation;
                 }
             }
@@ -167,6 +170,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     hasShot = true;
                 }
                 
+            }
+            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (shotgun)"))
+            {
+                if (hasShot == false)
+                {
+                    for(int i=0; i<9; i++)
+                    {
+                        
+                        Quaternion zmiana=Quaternion.Euler(0, -18+(i*5), 0);
+                        Vector3 vzmiana = new Vector3(0, -18 + (i * 5), 0);
+                        Transform newBullet = (Transform)Instantiate(bullet, shotgun.transform.position + shotgun.transform.forward, transform.rotation*Quaternion.Euler(0, -65, 0) *zmiana* Quaternion.Euler(0, 90, 90));
+                        //newBullet.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                        newBullet.GetComponent<Rigidbody>().mass = 400;
+                        newBullet.GetComponent<Rigidbody>().AddForce(newBullet.transform.up * 500000);
+                        
+                    }
+                    
+                    hasShot = true;
+                }
+
             }
             if (Input.GetKeyDown(KeyCode.R))
             {
@@ -210,9 +233,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 }
                 if((currentWeapon==Weapons.Shotgun)&&isTwisted==false)
                 {
-                    //shotgun.transform.Rotate(transform.forward, 83);
-                    //shotgun.transform.Rotate(transform.up, 20);
-                    //shotgun.transform.Translate(transform.right*0.1f);
+                    
                     isTwisted = true;
                 }
             }
@@ -220,7 +241,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 m_Animator.SetBool("Shooting", false);
             }
-            if(Input.GetAxis("Mouse ScrollWheel")!=0)
+            if (Input.GetAxis("Mouse ScrollWheel") != 0 && this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
             {
                 if(Input.GetAxis("Mouse ScrollWheel")>0f)
                 {

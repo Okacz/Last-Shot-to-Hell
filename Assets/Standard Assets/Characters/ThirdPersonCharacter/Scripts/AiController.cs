@@ -51,7 +51,7 @@ public class AiController : MonoBehaviour {
                     b.freezeRotation = false;
                     b.isKinematic = false ;
                 }
-                GetComponent<Rigidbody>().AddForce((a.transform.up+new Vector3(0, 0.5f, 0))*5000);
+                GetComponent<Rigidbody>().AddForce((a.transform.up+new Vector3(0, 0.5f, 0))*a.GetComponent<Rigidbody>().mass*30);
                
                 
                 
