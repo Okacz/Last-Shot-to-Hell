@@ -130,26 +130,50 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 Quaternion interpolatedRotation=new Quaternion(0, 0, 0, 0);
                 if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (shotgun)") || this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (rifle)"))
                 {
-                    Vector3 targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
-                    Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
-                    neededRotation *= Quaternion.Euler(0, 50, 0);
-                    interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                    Vector3 targetPosition;
+                    if (cameraRayHit.transform.tag != "Enemy")
+                    {
+                        targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
+                        Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
+                        interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                        neededRotation *= Quaternion.Euler(0, 50, 0);
+                        transform.rotation = interpolatedRotation;
+                    }
+                    else
+                    {
+                        targetPosition = cameraRayHit.transform.position;
+                        print("position = " + targetPosition);
+                        Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
+                        neededRotation *= Quaternion.Euler(0, 50, 0);
+                        interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                        transform.rotation = interpolatedRotation;
+                    }
+
+
+
                     
                 }
                 else
                 {
-                    Vector3 targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
-                    Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
-                    interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                    Vector3 targetPosition;
+                    if(cameraRayHit.transform.tag!="Enemy")
+                    {
+                        targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
+                        Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
+                        interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                        transform.rotation = interpolatedRotation;
+                    }
+                    else
+                    {
+                        targetPosition = cameraRayHit.transform.position;
+                        print("position = " + targetPosition);
+                        Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
+                        interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
+                        transform.rotation = interpolatedRotation;
+                    }
+                    
                 }
-                if (cameraRayHit.transform.tag == "Ground")
-                {                   
-                    transform.rotation = interpolatedRotation;
-                }
-                if(cameraRayHit.transform.tag=="Enemy")
-                {
-                    transform.rotation = interpolatedRotation;
-                }
+                
             }
         }
         void BangEnded()
@@ -165,6 +189,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 if(hasShot==false)
                 {
+                    revolver.GetComponent<AudioSource>().Play();
                     Transform newBullet = (Transform)Instantiate(bullet, revolver.transform.position+transform.forward, transform.rotation*Quaternion.Euler(0, 90, 90));
                     newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 200000);
                     hasShot = true;
@@ -175,6 +200,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 if (hasShot == false)
                 {
+                    shotgun.GetComponent<AudioSource>().Play();
                     for(int i=0; i<9; i++)
                     {
                         

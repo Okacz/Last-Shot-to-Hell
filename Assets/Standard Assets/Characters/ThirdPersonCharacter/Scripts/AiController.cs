@@ -55,14 +55,22 @@ public class AiController : MonoBehaviour {
                     }
                    
                 }
-                GetComponent<Rigidbody>().freezeRotation = true;
-                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                tag = "Untagged";
+                gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+                Destroy(GetComponent<Rigidbody>());
+                //GetComponent<Rigidbody>().freezeRotation = true;
+                //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
                 {
                     b.enableProjection = true;
-
+                    
+                    
                 }
-               
+                
+                foreach(Transform child in GetComponentsInChildren<Transform>())
+                {
+                    child.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+                }
                 
                 
                 
