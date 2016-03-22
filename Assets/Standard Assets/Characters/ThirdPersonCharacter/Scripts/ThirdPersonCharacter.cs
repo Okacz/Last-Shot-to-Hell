@@ -135,14 +135,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     {
                         targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
                         Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
-                        interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
                         neededRotation *= Quaternion.Euler(0, 50, 0);
+                        interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
                         transform.rotation = interpolatedRotation;
                     }
                     else
                     {
                         targetPosition = cameraRayHit.transform.position;
-                        print("position = " + targetPosition);
                         Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
                         neededRotation *= Quaternion.Euler(0, 50, 0);
                         interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
