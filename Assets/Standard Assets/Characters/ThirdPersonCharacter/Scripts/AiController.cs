@@ -49,15 +49,14 @@ public class AiController : MonoBehaviour {
                 {
                     b.freezeRotation = false;
                     b.isKinematic = false ;
-                    if(b.name=="Spine1")
-                    {
-                        b.GetComponent<Rigidbody>().AddForce((a.transform.up + new Vector3(0, 0.5f, 0)) * a.GetComponent<Rigidbody>().mass * 30);
-                    }
+                    
                    
                 }
                 tag = "Untagged";
                 gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-                Destroy(GetComponent<Rigidbody>());
+                //Destroy(GetComponent<Rigidbody>());
+                GetComponent<Rigidbody>().isKinematic = true;
+                GetComponent<CapsuleCollider>().enabled = false;
                 //GetComponent<Rigidbody>().freezeRotation = true;
                 //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())

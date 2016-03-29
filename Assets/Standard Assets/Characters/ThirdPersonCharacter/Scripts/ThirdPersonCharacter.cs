@@ -232,6 +232,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 camera.transform.rotation = mainCameraRotation;
                 }
             }
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                Application.LoadLevel("scena1");
+            }
             if (Input.GetKey(KeyCode.E))
             {
                 m_Animator.SetBool("Punching", true);
@@ -293,16 +297,17 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
-			if (move.magnitude > 1f) move.Normalize();
-			move = transform.InverseTransformDirection(move);
-            
-			CheckGroundStatus();
+            if (move.magnitude > 1f) move.Normalize();
+            move = transform.InverseTransformDirection(move);
+            CheckGroundStatus();
 			move = Vector3.ProjectOnPlane(move, m_GroundNormal);
 			m_TurnAmount = Mathf.Atan2(move.x, move.z);
 			m_ForwardAmount = move.z;
             m_LeftAmount = move.x;
+            //m_Rigidbody.velocity = transform.forward * 10;
+            //print("movex = " + move.x + " movez =" + move.z);
             //GetComponent<CharacterController>().Move(new Vector3(m_ForwardAmount, 0, m_LeftAmount)*0.1f);
-            //m_Rigidbody.velocity = new Vector3(move.x*5, 0, move.z*5);
+            
 			//ApplyExtraTurnRotation();
 
 			// control and velocity handling is different when grounded and airborne:
