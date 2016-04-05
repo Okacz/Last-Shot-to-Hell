@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace UnityStandardAssets.Characters.ThirdPerson
-{
+
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(ThirdPersonCharacter))]
     [RequireComponent(typeof(Animator))]
@@ -96,4 +95,4 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             stop = true;
         }
     }
-}
+

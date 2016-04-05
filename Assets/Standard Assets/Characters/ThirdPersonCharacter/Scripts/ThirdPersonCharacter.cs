@@ -1,7 +1,6 @@
 using UnityEngine;
 
-namespace UnityStandardAssets.Characters.ThirdPerson
-{
+
 	[RequireComponent(typeof(Rigidbody))]
 	[RequireComponent(typeof(CapsuleCollider))]
 	[RequireComponent(typeof(Animator))]
@@ -54,7 +53,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Start()
 		{
             currentWeapon = Weapons.Revolver;
-            mainCameraPosition = camera.transform.position;
+            mainCameraPosition = camera.transform.position - transform.position ;
             mainCameraRotation = camera.transform.rotation;
             rifle.gameObject.SetActive(false);
             shotgun.gameObject.SetActive(false);
@@ -181,7 +180,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         }
         void Update()
         {
-            
+            camera.transform.position = transform.position + mainCameraPosition;
             LookAtCursor(); //Kod na patrzenie w kierunku kursora, usun¹æ dla sterowania bez myszki
             
             if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (revolver)"))
@@ -480,4 +479,4 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 		}
 	}
-}
+
