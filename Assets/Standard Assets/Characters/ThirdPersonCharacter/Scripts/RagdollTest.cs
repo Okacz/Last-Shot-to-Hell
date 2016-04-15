@@ -5,11 +5,12 @@ public class RagdollTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        foreach (Rigidbody a in GetComponentsInChildren<Rigidbody>())
+        /*foreach (Rigidbody a in GetComponentsInChildren<Rigidbody>())
         {
             a.freezeRotation = true;
             a.isKinematic = true; ;
-        }
+        }*/
+        GetComponent<Rigidbody>().isKinematic = false;
 	}
     
     IEnumerator wait()
@@ -21,15 +22,46 @@ public class RagdollTest : MonoBehaviour {
     {
         
         }
+    void unfreezePosition()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        }
+    }
+    void freezePosition()
+    {
+
+        if(Input.GetKeyDown(KeyCode.I))
+        {
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+            //UnityEditor.PrefabUtility.ResetToPrefabState(this.gameObject);
+        }
+    }
 	// Update is called once per frame
 	void Update () {
-	
+        unfreezePosition();
+        freezePosition();;
+        print(GetComponent<ConstantForce>());
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
+            {
+                if (b.name == "Pelvis")
+                {
+                    b.freezeRotation = true;
+                    b.isKinematic = true;
+                }
 
-        if(Input.GetKeyDown(KeyCode.H))
+
+            }
+        }
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        if(Input.GetKeyDown(KeyCode.T))
         {
             if(GetComponent<Animator>().enabled==true)
             {
-
+                GetComponent<NavMeshAgent>().enabled = false;
             GetComponent<Animator>().enabled = false;
             foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
             {
@@ -42,7 +74,7 @@ public class RagdollTest : MonoBehaviour {
             GetComponent<CapsuleCollider>().enabled = false;
             foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
             {
-                b.enableProjection = true;
+         //       b.enableProjection = true;
 
 
             }
@@ -50,24 +82,30 @@ public class RagdollTest : MonoBehaviour {
             }
             else
             {
+                GetComponent<Rigidbody>().AddForce(0, 10, 0);   
+                GetComponent<NavMeshAgent>().enabled = true;
                 foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
                 {
                     b.freezeRotation = true;
                     b.isKinematic = true;
-
+                    b.velocity = Vector3.zero;
                     
                 }
                 GetComponent<Rigidbody>().isKinematic = false;
                 GetComponent<Animator>().enabled = true;
-                GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
                 Invoke("Enable", 1);
+                
                 GetComponent<CapsuleCollider>().enabled = true;
-                /*foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+                foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
                 {
                     b.enableProjection = false;
 
 
-                }*/
+                }
+                GetComponent<AICharacterControl>().enabled = false;
+                
             
             }
 

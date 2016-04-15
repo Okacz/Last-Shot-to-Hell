@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.UI;
 
 	[RequireComponent(typeof(Rigidbody))]
 	[RequireComponent(typeof(CapsuleCollider))]
@@ -33,11 +33,19 @@ using UnityEngine;
         Vector3 mainCameraPosition;
         Quaternion mainCameraRotation;
 
+        int revolverAmmo = 0;
+        int shotgunAmmo = 0;
+        int dynamiteAmmo = 0;
 
+
+
+        public GameObject weaponPanels;
         public Transform shotgun;
         public Transform rifle;
         public Transform bullet;
         public Transform revolver;
+        public Transform dynamite;
+        public Transform litDynamite;
         public Camera camera;
 
         public enum Weapons
@@ -49,14 +57,49 @@ using UnityEngine;
             Dynamite = 4
         };
         Weapons currentWeapon;
+        void UpdateAmmo()
+        {
+            foreach (Transform child in weaponPanels.transform)
+            {
+                
+                
+                foreach (Transform child1 in child.transform)
+                {
+                   
+                    if(child.name=="ShotgunPanel")
+                    {
+                        child1.gameObject.GetComponent<Text>().text = "x " + shotgunAmmo.ToString() +"";
+                    }
+                    if (child.name == "RevolverPanel")
+                    {
+                        child1.gameObject.GetComponent<Text>().text = "x " + revolverAmmo.ToString() + "";
+                        
 
+                    }
+                    if (child.name == "DynamitePanel")
+                    {
+                        string newtext = "x " + dynamiteAmmo;
+                        child1.gameObject.GetComponent<Text>().text = newtext;
+                    }
+                }
+            }
+                
+           /* weaponPanels.transform.FindChild("RevolverPanel").GetComponentInChildren<Text>().text = "x " + revolverAmmo;
+            weaponPanels.transform.FindChild("ShotgunPane").GetComponentInChildren<Text>().text = "x " + shotgunAmmo;
+            weaponPanels.transform.FindChild("DynamitePanel").GetComponentInChildren<Text>().text = "x " + dynamiteAmmo;*/
+        }
 		void Start()
 		{
+            revolverAmmo = 100;
+            shotgunAmmo = 10;
+            dynamiteAmmo = 10;
+            UpdateAmmo();
             currentWeapon = Weapons.Revolver;
             mainCameraPosition = camera.transform.position - transform.position ;
             mainCameraRotation = camera.transform.rotation;
             rifle.gameObject.SetActive(false);
             shotgun.gameObject.SetActive(false);
+            dynamite.gameObject.SetActive(false);
 			m_Animator = GetComponent<Animator>();
 			m_Rigidbody = GetComponent<Rigidbody>();
 			m_Capsule = GetComponent<CapsuleCollider>();
@@ -94,28 +137,52 @@ using UnityEngine;
                     rifle.gameObject.SetActive(false);
                     shotgun.gameObject.SetActive(false);
                     m_Animator.SetInteger("Weapon", 0);
+                    weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(false);
+                    weaponPanels.transform.FindChild("ShotgunPane").gameObject.SetActive(false);
+                    weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
                     break;
                 case 1: currentWeapon = Weapons.Revolver;
                     revolver.gameObject.SetActive(true);
                     rifle.gameObject.SetActive(false);
                     shotgun.gameObject.SetActive(false);
+                    dynamite.gameObject.SetActive(false);
                     m_Animator.SetInteger("Weapon", 1);
+                    weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(true);
+                    weaponPanels.transform.FindChild("ShotgunPanel").gameObject.SetActive(false);
+                    weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
                     break;
                 case 2: currentWeapon = Weapons.Rifle;
                     revolver.gameObject.SetActive(false);
                     rifle.gameObject.SetActive(true);
                     shotgun.gameObject.SetActive(false);
+                    dynamite.gameObject.SetActive(false);
                     m_Animator.SetInteger("Weapon", 2);
+                    weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(false);
+                    weaponPanels.transform.FindChild("ShotgunPanel").gameObject.SetActive(false);
+                    weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
                     break;
                 case 3: currentWeapon = Weapons.Shotgun; 
                     revolver.gameObject.SetActive(false);
                     rifle.gameObject.SetActive(false);
                     shotgun.gameObject.SetActive(true);
+                    dynamite.gameObject.SetActive(false);
                     m_Animator.SetInteger("Weapon", 3);
+                    weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(false);
+                    weaponPanels.transform.FindChild("ShotgunPanel").gameObject.SetActive(true);
+                    weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
                     break;
-                case 4: currentWeapon = Weapons.Dynamite; break;
+                case 4: currentWeapon = Weapons.Dynamite;
+                    revolver.gameObject.SetActive(false);
+                    rifle.gameObject.SetActive(false);
+                    shotgun.gameObject.SetActive(false);
+                    dynamite.gameObject.SetActive(true);
+                    m_Animator.SetInteger("Weapon", 4);
+                    weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(false);
+                    weaponPanels.transform.FindChild("ShotgunPanel").gameObject.SetActive(false);
+                    weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(true);
+                    
+                    break;
             }
-            print((int)currentWeapon);
                 
         }
 
@@ -164,7 +231,6 @@ using UnityEngine;
                     else
                     {
                         targetPosition = cameraRayHit.transform.position;
-                        print("position = " + targetPosition);
                         Quaternion neededRotation = Quaternion.LookRotation(targetPosition - transform.position);
                         interpolatedRotation = Quaternion.Slerp(transform.rotation, neededRotation, Time.deltaTime * 7);
                         transform.rotation = interpolatedRotation;
@@ -177,6 +243,15 @@ using UnityEngine;
         void BangEnded()
         {
             hasShot = false;
+            if(currentWeapon==Weapons.Revolver)
+            {
+                revolverAmmo--;
+            }
+            if (currentWeapon == Weapons.Shotgun)
+            {
+                shotgunAmmo--;
+            }
+            UpdateAmmo();
         }
         void Update()
         {
@@ -252,7 +327,7 @@ using UnityEngine;
                 m_Animator.SetBool("Punching", false);
 
             }
-            if(Input.GetButton("Fire1"))
+            if(Input.GetButton("Fire1")&&currentWeapon!=Weapons.Dynamite)
             {
                 if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punch"))
                 {
@@ -265,9 +340,19 @@ using UnityEngine;
                     isTwisted = true;
                 }
             }
-            else
+            if (Input.GetButtonDown("Fire1")&&currentWeapon==Weapons.Dynamite)
             {
+                
+                    m_Animator.SetBool("Shooting", true);
+
+                
+            }
+            if (Input.GetButtonUp("Fire1"))
+            {
+
                 m_Animator.SetBool("Shooting", false);
+
+
             }
             if (Input.GetAxis("Mouse ScrollWheel") != 0 && this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
             {
@@ -280,6 +365,24 @@ using UnityEngine;
                    ChangeWeapon(  GetEnumValue(false));
                 }
             }
+        }
+        void ThrowDynamite()
+        {
+            Transform newDynamite = (Transform)Instantiate(litDynamite, dynamite.transform.position + transform.forward, transform.rotation * Quaternion.Euler(0, 90, 90));
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit cameraRayHit;
+            float power = 0;
+            if (Physics.Raycast(ray, out cameraRayHit))
+            {
+               Vector3 targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
+               power = Vector3.Distance(targetPosition, transform.position);
+               
+               print("power: "+power);
+            }
+            newDynamite.GetComponent<Rigidbody>().AddForce(transform.forward * 70*power);
+
+            dynamiteAmmo--;
+            UpdateAmmo();
         }
         void CanSeePlayer() {
             
@@ -455,7 +558,7 @@ using UnityEngine;
 			}
 		}
 
-
+        
 		void CheckGroundStatus()
 		{
 			RaycastHit hitInfo;

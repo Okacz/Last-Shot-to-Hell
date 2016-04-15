@@ -69,7 +69,6 @@ using UnityEngine;
                 if (stop == true)
                 {
 
-                    print("Pozycja: " + agent.remainingDistance);
                     StartCoroutine(wait());
                     GetComponent<Animator>().SetFloat("Forward", 1);
                     GetComponent<Animator>().SetBool("IsPunching", false);
