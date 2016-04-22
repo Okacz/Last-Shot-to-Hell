@@ -5,19 +5,28 @@ public class AiController : MonoBehaviour {
 
 
     public Transform target;
+    public Transform enemy;
     bool dead = false;
-    public int HP = 100;
+    public int HP = 40;
     //int chase = 1;
 
 	// Use this for initialization
 	void Start () {
-
-
-        
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+        foreach (CapsuleCollider a in GetComponentsInChildren<CapsuleCollider>())
+        {
+            a.enabled = false;
+        }
+        foreach (BoxCollider a in GetComponentsInChildren<BoxCollider>())
+        {
+            a.enabled = false;
+        }
         foreach (Rigidbody a in GetComponentsInChildren<Rigidbody>()) {
             a.freezeRotation = true;
             a.isKinematic = true;
      }
+        GetComponent<CapsuleCollider>().enabled = true;
+        //GetComponent<BoxCollider>().enabled = true;
         //GetComponent<Rigidbody>().isKinematic = false;
 	}
 	
@@ -29,51 +38,22 @@ public class AiController : MonoBehaviour {
     }
 
 
-    public void Ragdollize()
-    {
-        GetComponent<Animator>().enabled = false;
-        GetComponent<NavMeshAgent>().enabled = false;
-
-        foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
-        {
-            b.freezeRotation = false;
-            b.isKinematic = false;
-            if (b.name == "Spine1")
-            {
-            //    b.GetComponent<Rigidbody>().AddForce((a.transform.up + new Vector3(0, 0.5f, 0)) * a.GetComponent<Rigidbody>().mass * 10);
-            }
-
-        }
-        tag = "Untagged";
-        gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-        GetComponent<Rigidbody>().isKinematic = true;
-        GetComponent<CapsuleCollider>().enabled = false;
-        foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
-        {
-            b.enableProjection = true;
-
-
-        }
-        GetComponent<AICharacterControl>().enabled = false;
-        foreach (Transform child in GetComponentsInChildren<Transform>())
-        {
-            child.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-        }
-        target = null;
-        dead = true;
-    }
-
+    
     void TakeDamage(int damage)
     {
         HP -= damage;
     }
     void OnTriggerEnter(Collider a)
     {
-        
+        if(a.name=="KickingFoot")
+        {
+            if(target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punch"))
+            GetComponent<RagdollizationScript>().Ragdollize(a, 10);
+        }
         if(a.tag=="Bullet")
         {
             //GetComponent<Animator>().SetTrigger("IsHit");
-            HP -= 20;
+           TakeDamage(20);
             foreach (ParticleSystem b in GetComponentsInChildren<ParticleSystem>())
             {
 
@@ -83,8 +63,8 @@ public class AiController : MonoBehaviour {
             }
             if(!dead&&HP<=0)
             {
-
-                Ragdollize();
+                
+                GetComponent<RagdollizationScript>().Ragdollize(a, 4);
                 dead = true;
                 
             }

@@ -83,13 +83,11 @@ using UnityEngine.UI;
                     }
                 }
             }
-                
-           /* weaponPanels.transform.FindChild("RevolverPanel").GetComponentInChildren<Text>().text = "x " + revolverAmmo;
-            weaponPanels.transform.FindChild("ShotgunPane").GetComponentInChildren<Text>().text = "x " + shotgunAmmo;
-            weaponPanels.transform.FindChild("DynamitePanel").GetComponentInChildren<Text>().text = "x " + dynamiteAmmo;*/
+            
         }
 		void Start()
 		{
+            weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(true);
             revolverAmmo = 100;
             shotgunAmmo = 10;
             dynamiteAmmo = 10;

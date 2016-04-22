@@ -3,9 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 
-    [RequireComponent(typeof(NavMeshAgent))]
-    [RequireComponent(typeof(ThirdPersonCharacter))]
-    [RequireComponent(typeof(Animator))]
+    
     public class AICharacterControl : MonoBehaviour
     {
         public NavMeshAgent agent { get; private set; } // the navmesh agent required for the path finding
@@ -17,13 +15,14 @@ using UnityEngine;
         // Use this for initialization
         private void Start()
         {
+
             // get the components on the object we need ( should not be null due to require component so no need to check )
             agent = GetComponentInChildren<NavMeshAgent>();
             character = GetComponent<ThirdPersonCharacter>();
             controller = GetComponent<AiController>();
 	        agent.updateRotation = false;
 	        agent.updatePosition = true;
-
+            target = GameObject.FindGameObjectWithTag("Player").transform;
             
         }
 
