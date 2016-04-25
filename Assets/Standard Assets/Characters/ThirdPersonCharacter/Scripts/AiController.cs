@@ -3,7 +3,7 @@ using System.Collections;
 
 public class AiController : MonoBehaviour {
 
-
+    public ThirdPersonCharacter target2;
     public Transform target;
     public Transform enemy;
     bool dead = false;
@@ -13,6 +13,7 @@ public class AiController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         target = GameObject.FindGameObjectWithTag("Player").transform;
+        target2 = target.GetComponent<ThirdPersonCharacter>();
         foreach (CapsuleCollider a in GetComponentsInChildren<CapsuleCollider>())
         {
             a.enabled = false;
@@ -71,6 +72,13 @@ public class AiController : MonoBehaviour {
             
             
         }
+        /*if (GetComponentInParent<Animation>().IsPlaying("attack1"))
+        {*/
+            if (a.tag == "GameController")
+            {
+                target2.Damage(10);
+            }
+        //}
         /*if(a.tag=="Cactus")
         {
             print("walnął w kaktusa");

@@ -1,7 +1,8 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-	[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody))]
 	[RequireComponent(typeof(CapsuleCollider))]
 	[RequireComponent(typeof(Animator))]
 	public class ThirdPersonCharacter : MonoBehaviour
@@ -32,6 +33,10 @@ using UnityEngine.UI;
         bool isTwisted = false;
         Vector3 mainCameraPosition;
         Quaternion mainCameraRotation;
+        private float health;
+        public float maxHealth;
+        public float invulnerabilityTime;
+        bool invulnerable = false;
 
         int revolverAmmo = 0;
         int shotgunAmmo = 0;
@@ -106,8 +111,10 @@ using UnityEngine.UI;
             m_Animator.SetInteger("Weapon", 1);
 			m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			m_OrigGroundCheckDistance = m_GroundCheckDistance;
+            health = maxHealth;
+            UpdateHealth();
             
-		}
+        }
         int GetEnumValue(bool dir)
         {
             int a = (int)currentWeapon;
@@ -382,7 +389,62 @@ using UnityEngine.UI;
             dynamiteAmmo--;
             UpdateAmmo();
         }
-        void CanSeePlayer() {
+    public IEnumerator DamageEnum(int newHealth)
+    {
+
+        if (invulnerable == false && health > 0)
+        {
+            health -= newHealth;
+            GetComponent<AudioSource>().Play();
+            UpdateHealth();
+            if (health <= 0)
+            {
+                //print("posz³o die enum");
+                die();
+            }
+            else
+                invulnerable = true;
+            yield return new WaitForSeconds(0.1f * invulnerabilityTime);
+            invulnerable = false;
+
+        }
+
+    }
+    public void die()
+    {
+        Time.timeScale = 0;
+    }
+    public void Damage(int newHealth)
+    {
+        StartCoroutine(DamageEnum(newHealth));
+    }
+    /*public void TakeDamage(int newHealth)
+    {
+
+        health -= newHealth;
+        //GetComponent<AudioSource>().Play();
+        UpdateHealth();
+        if (health <= 0 && respawned == false)
+        {
+            print("posz³o die take");
+            die();
+        }
+    }*/
+
+    void UpdateHealth()
+        {
+            //healthText.text = "HP: " + health;
+
+           /*float oldX = healthBar.transform.position.x;
+           float oldW = healthBar.GetComponent<RectTransform>().rect.width;
+           float w = maxBarLength * (health / maxHealth);
+           float h = healthBar.GetComponent<RectTransform>().rect.height;
+           healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(w, h);
+           healthBar.transform.Translate(new Vector3((-oldW + w) / 2, 0, 0));*/
+        }
+
+
+    void CanSeePlayer() {
             
         }
         public void Move(Vector3 move, bool crouch, bool jump)
