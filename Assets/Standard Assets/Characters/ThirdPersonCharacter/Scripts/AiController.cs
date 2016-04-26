@@ -74,8 +74,9 @@ public class AiController : MonoBehaviour {
         }
         /*if (GetComponentInParent<Animation>().IsPlaying("attack1"))
         {*/
-            if (a.tag == "GameController")
+            if (a.tag == "Player")
             {
+                print("uderzenie");
                 target2.Damage(10);
             }
         //}

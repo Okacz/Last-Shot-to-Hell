@@ -41,10 +41,11 @@ using UnityEngine.UI;
         int revolverAmmo = 0;
         int shotgunAmmo = 0;
         int dynamiteAmmo = 0;
-
+        int healthTxt = 100;
 
 
         public GameObject weaponPanels;
+        public GameObject healthText;
         public Transform shotgun;
         public Transform rifle;
         public Transform bullet;
@@ -93,6 +94,7 @@ using UnityEngine.UI;
 		void Start()
 		{
             weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(true);
+            //healthText.transform.FindChild("HealthText").gameObject.SetActive(true);
             revolverAmmo = 100;
             shotgunAmmo = 10;
             dynamiteAmmo = 10;
@@ -389,27 +391,7 @@ using UnityEngine.UI;
             dynamiteAmmo--;
             UpdateAmmo();
         }
-    public IEnumerator DamageEnum(int newHealth)
-    {
-
-        if (invulnerable == false && health > 0)
-        {
-            health -= newHealth;
-            GetComponent<AudioSource>().Play();
-            UpdateHealth();
-            if (health <= 0)
-            {
-                //print("posz³o die enum");
-                die();
-            }
-            else
-                invulnerable = true;
-            yield return new WaitForSeconds(0.1f * invulnerabilityTime);
-            invulnerable = false;
-
-        }
-
-    }
+    
     public void die()
     {
         Time.timeScale = 0;
@@ -430,18 +412,40 @@ using UnityEngine.UI;
             die();
         }
     }*/
+    public IEnumerator DamageEnum(int newHealth)
+    {
 
+        if (invulnerable == false && health > 0)
+        {
+            health -= newHealth;
+            healthTxt -= newHealth;
+            //GetComponent<AudioSource>().Play();
+            UpdateHealth();
+            if (health <= 0)
+            {
+                //print("posz³o die enum");
+                die();
+            }
+            else
+                invulnerable = true;
+            yield return new WaitForSeconds(0.1f * invulnerabilityTime);
+            invulnerable = false;
+
+        }
+
+    }
     void UpdateHealth()
         {
-            //healthText.text = "HP: " + health;
+        healthText.gameObject.GetComponent<Text>().text = healthTxt.ToString();
+        //healthText.text = "HP: " + health;
 
-           /*float oldX = healthBar.transform.position.x;
-           float oldW = healthBar.GetComponent<RectTransform>().rect.width;
-           float w = maxBarLength * (health / maxHealth);
-           float h = healthBar.GetComponent<RectTransform>().rect.height;
-           healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(w, h);
-           healthBar.transform.Translate(new Vector3((-oldW + w) / 2, 0, 0));*/
-        }
+        /*float oldX = healthBar.transform.position.x;
+        float oldW = healthBar.GetComponent<RectTransform>().rect.width;
+        float w = maxBarLength * (health / maxHealth);
+        float h = healthBar.GetComponent<RectTransform>().rect.height;
+        healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(w, h);
+        healthBar.transform.Translate(new Vector3((-oldW + w) / 2, 0, 0));*/
+    }
 
 
     void CanSeePlayer() {

@@ -44,7 +44,7 @@ public class RagdollTest : MonoBehaviour {
 	void Update () {
         unfreezePosition();
         freezePosition();;
-        print(GetComponent<ConstantForce>());
+        //print(GetComponent<ConstantForce>());
         if(Input.GetKeyDown(KeyCode.O))
         {
             foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
