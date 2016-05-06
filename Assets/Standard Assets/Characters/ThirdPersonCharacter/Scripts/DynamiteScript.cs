@@ -21,6 +21,7 @@ public class DynamiteScript : MonoBehaviour {
             
             if(col.transform.name.StartsWith("RagDollBitch"))
             {
+                col.gameObject.GetComponent<AiController>().HP = 0;
                 print(col.transform.name);
                 col.gameObject.SendMessage("Ragdollize");
             }

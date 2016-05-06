@@ -14,10 +14,10 @@ public class AiController : MonoBehaviour {
 	void Start () {
         target = GameObject.FindGameObjectWithTag("Player").transform;
         target2 = target.GetComponent<ThirdPersonCharacter>();
-        foreach (CapsuleCollider a in GetComponentsInChildren<CapsuleCollider>())
+        /*foreach (CapsuleCollider a in GetComponentsInChildren<CapsuleCollider>())
         {
             a.enabled = false;
-        }
+        }*/
         foreach (BoxCollider a in GetComponentsInChildren<BoxCollider>())
         {
             a.enabled = false;
@@ -74,11 +74,11 @@ public class AiController : MonoBehaviour {
         }
         /*if (GetComponentInParent<Animation>().IsPlaying("attack1"))
         {*/
-            if (a.tag == "Player")
+            /*if (a.tag == "Player")
             {
                 print("uderzenie");
                 target2.Damage(10);
-            }
+            }*/
         //}
         /*if(a.tag=="Cactus")
         {

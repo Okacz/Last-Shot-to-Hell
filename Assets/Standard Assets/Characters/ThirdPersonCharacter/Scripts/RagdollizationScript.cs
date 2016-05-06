@@ -2,7 +2,39 @@
 using System.Collections;
 
 public class RagdollizationScript : MonoBehaviour {
+    public void RagdollizePlayer()
+    {
+        GetComponent<Animator>().enabled = false;
 
+        foreach (CapsuleCollider a in GetComponentsInChildren<CapsuleCollider>())
+        {
+            a.enabled = true;
+        }
+        
+
+        foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
+        {
+
+            b.freezeRotation = false;
+            b.isKinematic = false;
+            if (b.name == "Spine1")
+            {
+
+            }
+
+        }
+        tag = "Untagged";
+        GetComponent<Rigidbody>().isKinematic = true;
+        
+        GetComponent<BoxCollider>().enabled = false;
+        foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
+        {
+            b.enableProjection = true;
+
+
+        }
+        
+    }
 	public void Ragdollize()
     {
         GetComponent<Animator>().enabled = false;
@@ -156,6 +188,7 @@ public class RagdollizationScript : MonoBehaviour {
             }
             GetComponent<AICharacterControl>().enabled = true;
     }
+    
     public void Unragdollize()
     {
         Vector3 position2=Vector3.zero;

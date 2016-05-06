@@ -3,7 +3,10 @@ using System.Collections;
 using UnityEngine;
 
 
-    
+public enum Type
+{
+    Melee, Revolver
+}
     public class AICharacterControl : MonoBehaviour
     {
         public NavMeshAgent agent { get; private set; } // the navmesh agent required for the path finding
@@ -12,10 +15,16 @@ using UnityEngine;
         AiController controller;
         Animator m_Animator;
         bool stop = true;
+        public Type Typ;
+        public Transform revolver;
+        public Transform bullet;
         // Use this for initialization
         private void Start()
         {
-
+            if(Typ==Type.Melee)
+            {
+                revolver.gameObject.SetActive(false);
+            }
             // get the components on the object we need ( should not be null due to require component so no need to check )
             agent = GetComponentInChildren<NavMeshAgent>();
             character = GetComponent<ThirdPersonCharacter>();
@@ -23,7 +32,6 @@ using UnityEngine;
 	        agent.updateRotation = false;
 	        agent.updatePosition = true;
             target = GameObject.FindGameObjectWithTag("Player").transform;
-            
         }
 
 
@@ -39,6 +47,11 @@ using UnityEngine;
                 if(controller.HP>0)
                 {
                     transform.LookAt(target);
+                    transform.eulerAngles = new Vector3(
+                            0,
+                            transform.eulerAngles.y,
+                            0
+                            );
 
                 }
                 UpdateAnimator();
@@ -62,26 +75,52 @@ using UnityEngine;
         }
         public void UpdateAnimator()
         {
-
-            if (agent.remainingDistance > 1.8)
+            if (Typ==Type.Melee)
             {
-                if (stop == true)
+
+
+                if (agent.remainingDistance > 1.8)
                 {
+
 
                     StartCoroutine(wait());
                     GetComponent<Animator>().SetFloat("Forward", 1);
                     GetComponent<Animator>().SetBool("IsPunching", false);
+
+                }
+                else
+                {
+                    GetComponent<Animator>().SetFloat("Forward", 0);
+                    GetComponent<Animator>().SetBool("IsPunching", true);
                 }
             }
-            else
+            if (Typ == Type.Revolver)
             {
-                GetComponent<Animator>().SetFloat("Forward", 0);
-                GetComponent<Animator>().SetBool("IsPunching", true);
+
+
+                if (agent.remainingDistance > 15)
+                {
+
+
+                    StartCoroutine(wait());
+                    GetComponent<Animator>().SetFloat("Forward", 1);
+                    GetComponent<Animator>().SetBool("IsShooting", false);
+
+                }
+                else
+                {
+                    GetComponent<Animator>().SetFloat("Forward", 0);
+                    GetComponent<Animator>().SetBool("IsShooting", true);
+                }
             }
-           
-            
+
         }
-       
+       public void shoot()
+        {
+            Transform newBullet = (Transform)Instantiate(bullet, transform.position + transform.forward + new Vector3(0, 1, 0), transform.rotation * Quaternion.Euler(0, 90, 90));
+            
+           newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 200000);
+        }
         public void SetTarget(Transform target)
         {
             this.target = target;

@@ -37,7 +37,10 @@ using UnityEngine.UI;
         public float maxHealth;
         public float invulnerabilityTime;
         bool invulnerable = false;
-
+        public float revolverCooldown;
+        public float shotgunCooldown;
+        private bool isRevolverCD = false;
+        private bool isShotgunCD = false;
         int revolverAmmo = 0;
         int shotgunAmmo = 0;
         int dynamiteAmmo = 0;
@@ -100,7 +103,7 @@ using UnityEngine.UI;
             dynamiteAmmo = 10;
             UpdateAmmo();
             currentWeapon = Weapons.Revolver;
-            mainCameraPosition = camera.transform.position - transform.position ;
+            mainCameraPosition = camera.transform.position - transform.position;
             mainCameraRotation = camera.transform.rotation;
             rifle.gameObject.SetActive(false);
             shotgun.gameObject.SetActive(false);
@@ -247,22 +250,46 @@ using UnityEngine.UI;
                 
             }
         }
+        IEnumerator revolverShotCooldown()
+        {
+            isRevolverCD = true;
+            print("Czekam");
+            yield return new WaitForSeconds(revolverCooldown);
+            isRevolverCD = false;
+            print("Koniec");
+        }
+        IEnumerator shotgunShotCooldown()
+        {
+            isShotgunCD = true;
+            yield return new WaitForSeconds(shotgunCooldown);
+            isShotgunCD = false;
+        }
         void BangEnded()
         {
             hasShot = false;
             if(currentWeapon==Weapons.Revolver)
             {
                 revolverAmmo--;
+                StartCoroutine(revolverShotCooldown());
             }
             if (currentWeapon == Weapons.Shotgun)
             {
                 shotgunAmmo--;
+                StartCoroutine(shotgunShotCooldown());
             }
             UpdateAmmo();
+            
         }
         void Update()
         {
-            camera.transform.position = transform.position + mainCameraPosition;
+            if(health>0)
+            {
+                camera.transform.position = transform.position + mainCameraPosition;
+            }
+            else
+            {
+                camera.transform.position = transform.FindChild("Cowboy").FindChild("CG").FindChild("Pelvis").FindChild("Spine").transform.position + mainCameraPosition;
+            }
             LookAtCursor(); //Kod na patrzenie w kierunku kursora, usun¹æ dla sterowania bez myszki
             
             if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (revolver)"))
@@ -270,7 +297,7 @@ using UnityEngine.UI;
                 if(hasShot==false)
                 {
                     revolver.GetComponent<AudioSource>().Play();
-                    Transform newBullet = (Transform)Instantiate(bullet, revolver.transform.position+transform.forward, transform.rotation*Quaternion.Euler(0, 90, 90));
+                    Transform newBullet = (Transform)Instantiate(bullet, transform.position+transform.forward+new Vector3(0, 1, 0), transform.rotation*Quaternion.Euler(0, 90, 90));
                     newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 200000);
                     hasShot = true;
                 }
@@ -286,7 +313,7 @@ using UnityEngine.UI;
                         
                         Quaternion zmiana=Quaternion.Euler(0, -18+(i*5), 0);
                         Vector3 vzmiana = new Vector3(0, -18 + (i * 5), 0);
-                        Transform newBullet = (Transform)Instantiate(bullet, shotgun.transform.position + shotgun.transform.forward, transform.rotation*Quaternion.Euler(0, -65, 0) *zmiana* Quaternion.Euler(0, 90, 90));
+                        Transform newBullet = (Transform)Instantiate(bullet, transform.position + transform.forward + new Vector3(0, 1, 0), transform.rotation * Quaternion.Euler(0, -65, 0) * zmiana * Quaternion.Euler(0, 90, 90));
                         //newBullet.localScale = new Vector3(0.3f, 0.3f, 0.3f);
                         newBullet.GetComponent<Rigidbody>().mass = 400;
                         newBullet.GetComponent<Rigidbody>().AddForce(newBullet.transform.up * 500000);
@@ -317,6 +344,10 @@ using UnityEngine.UI;
             {
                 Application.LoadLevel("scena1");
             }
+            /*if (Input.GetKeyDown(KeyCode.Q))
+            {
+                m_Animator.SetTrigger("New Trigger");
+            }*/
             if (Input.GetKey(KeyCode.E))
             {
                 m_Animator.SetBool("Punching", true);
@@ -334,7 +365,7 @@ using UnityEngine.UI;
                 m_Animator.SetBool("Punching", false);
 
             }
-            if(Input.GetButton("Fire1")&&currentWeapon!=Weapons.Dynamite)
+            if(Input.GetButtonDown("Fire1")&&currentWeapon!=Weapons.Dynamite&&isRevolverCD==false)
             {
                 if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punch"))
                 {
@@ -354,7 +385,7 @@ using UnityEngine.UI;
 
                 
             }
-            if (Input.GetButtonUp("Fire1"))
+            if (Input.GetButtonUp("Fire1")||(isRevolverCD==true&&currentWeapon==Weapons.Revolver)||(isShotgunCD==true&&currentWeapon==Weapons.Shotgun))
             {
 
                 m_Animator.SetBool("Shooting", false);
@@ -394,7 +425,9 @@ using UnityEngine.UI;
     
     public void die()
     {
-        Time.timeScale = 0;
+        mainCameraPosition = (camera.transform.position - transform.FindChild("Cowboy").FindChild("CG").FindChild("Pelvis").FindChild("Spine").transform.position) / 3;
+        Time.timeScale = 0.2f;
+        GetComponent<RagdollizationScript>().RagdollizePlayer();
     }
     public void Damage(int newHealth)
     {
@@ -433,6 +466,15 @@ using UnityEngine.UI;
 
         }
 
+    }
+    void OnTriggerEnter(Collider a)
+    {
+        if (a.name == "EnemyArm"||a.tag=="EnemyBullet")
+        {
+            
+            Damage(10);
+        }
+        
     }
     void UpdateHealth()
         {
