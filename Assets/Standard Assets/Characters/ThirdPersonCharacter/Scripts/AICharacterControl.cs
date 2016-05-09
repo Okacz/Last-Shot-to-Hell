@@ -18,6 +18,7 @@ public enum Type
         public Type Typ;
         public Transform revolver;
         public Transform bullet;
+        NavMeshObstacle obstacle;
         // Use this for initialization
         private void Start()
         {
@@ -27,6 +28,7 @@ public enum Type
             }
             // get the components on the object we need ( should not be null due to require component so no need to check )
             agent = GetComponentInChildren<NavMeshAgent>();
+            obstacle = GetComponent<NavMeshObstacle>();
             character = GetComponent<ThirdPersonCharacter>();
             controller = GetComponent<AiController>();
 	        agent.updateRotation = false;
@@ -43,8 +45,22 @@ public enum Type
             if (target != null)
             {
                 agent.SetDestination(target.position);
-
-                if(controller.HP>0)
+                
+                //making them obstacles when they're attacking
+                if ((target.position - transform.position).sqrMagnitude < Mathf.Pow(agent.stoppingDistance, 1.8f))
+                {
+                    // If the agent is in attack range, become an obstacle and
+                    // disable the NavMeshAgent component
+                    obstacle.enabled = true;
+                    agent.enabled = false;
+                }
+                else {
+                    // If we are not in range, become an agent again
+                    obstacle.enabled = false;
+                    agent.enabled = true;
+                }
+                
+                if (controller.HP>0)
                 {
                     transform.LookAt(target);
                     transform.eulerAngles = new Vector3(
@@ -81,8 +97,7 @@ public enum Type
 
                 if (agent.remainingDistance > 1.8)
                 {
-
-
+                    
                     StartCoroutine(wait());
                     GetComponent<Animator>().SetFloat("Forward", 1);
                     GetComponent<Animator>().SetBool("IsPunching", false);
@@ -90,6 +105,7 @@ public enum Type
                 }
                 else
                 {
+                    
                     GetComponent<Animator>().SetFloat("Forward", 0);
                     GetComponent<Animator>().SetBool("IsPunching", true);
                 }
