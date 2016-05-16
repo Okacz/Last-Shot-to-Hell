@@ -18,6 +18,7 @@ public enum Type
         public Type Typ;
         public Transform revolver;
         public Transform bullet;
+        Quaternion newrotation = Quaternion.Euler(0, 180, 0);
         NavMeshObstacle obstacle;
         // Use this for initialization
         private void Start()
@@ -34,20 +35,26 @@ public enum Type
 	        agent.updateRotation = false;
 	        agent.updatePosition = true;
             target = GameObject.FindGameObjectWithTag("Player").transform;
+            obstacle.enabled = false;
+            agent.acceleration = 1000;
+            agent.autoBraking = false;
+            agent.angularSpeed = 1000;
         }
 
 
         // Update is called once per frame
         private void Update()
         {
+
+
             
-          
             if (target != null)
             {
+                if(agent.isActiveAndEnabled==true)
                 agent.SetDestination(target.position);
                 
                 //making them obstacles when they're attacking
-                if ((target.position - transform.position).sqrMagnitude < Mathf.Pow(agent.stoppingDistance, 1.8f))
+                /*if ((target.position - transform.position).sqrMagnitude < Mathf.Pow(agent.stoppingDistance, 1.8f))
                 {
                     // If the agent is in attack range, become an obstacle and
                     // disable the NavMeshAgent component
@@ -58,9 +65,10 @@ public enum Type
                     // If we are not in range, become an agent again
                     obstacle.enabled = false;
                     agent.enabled = true;
-                }
+                }*/
                 
-                if (controller.HP>0)
+                UpdateAnimator();
+                if (controller.HP > 0)
                 {
                     transform.LookAt(target);
                     transform.eulerAngles = new Vector3(
@@ -70,7 +78,13 @@ public enum Type
                             );
 
                 }
-                UpdateAnimator();
+                /*if(target.GetComponent<ThirdPersonCharacter>().health>0&&target!=null)
+                {
+                    
+                    Quaternion interpolatedRotation = Quaternion.Slerp(transform.rotation, newrotation, Time.deltaTime * 7);
+                    transform.rotation = interpolatedRotation;
+                }*/
+                
                 /*AiController Script = character.GetComponent<AiController>();
                 if (controller.HP > 0)
                 {*/
@@ -91,50 +105,71 @@ public enum Type
         }
         public void UpdateAnimator()
         {
-            if (Typ==Type.Melee)
+            if(target.GetComponent<ThirdPersonCharacter>().health>0&&target!=null&&agent.isActiveAndEnabled==true)
             {
-
-
-                if (agent.remainingDistance > 1.8)
+                GetComponent<Animator>().SetBool("IsPlayerDead", false);
+                if (Typ == Type.Melee && agent.remainingDistance >0)
                 {
-                    
-                    StartCoroutine(wait());
-                    GetComponent<Animator>().SetFloat("Forward", 1);
-                    GetComponent<Animator>().SetBool("IsPunching", false);
 
+                    GetComponent<Animator>().SetBool("IsPlayerDead", false);
+                    if (agent.remainingDistance > 1.8)
+                    {
+                        if(!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punching"))
+                        {
+                        agent.speed = 4;
+
+                        }
+                        StartCoroutine(wait());
+                        GetComponent<Animator>().SetFloat("Forward", 1);
+                        GetComponent<Animator>().SetBool("IsPunching", false);
+
+                    }
+                    else
+                    {
+                        agent.speed = 0;
+                        GetComponent<Animator>().SetFloat("Forward", 0);
+                        GetComponent<Animator>().SetBool("IsPunching", true);
+                    }
                 }
-                else
+                if (Typ == Type.Revolver && agent.remainingDistance > 0)
                 {
-                    
-                    GetComponent<Animator>().SetFloat("Forward", 0);
-                    GetComponent<Animator>().SetBool("IsPunching", true);
+
+
+                    if (agent.remainingDistance > 15)
+                    {
+                        if(!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Shooting")){
+                        agent.speed = 4;
+
+                        }
+                        StartCoroutine(wait());
+                        GetComponent<Animator>().SetFloat("Forward", 1);
+                        GetComponent<Animator>().SetBool("IsShooting", false);
+
+                    }
+                    else
+                    {
+                        agent.speed = 0;
+                        GetComponent<Animator>().SetFloat("Forward", 0);
+                        GetComponent<Animator>().SetBool("IsShooting", true);
+
+                    }
                 }
+            
             }
-            if (Typ == Type.Revolver)
+            else
             {
-
-
-                if (agent.remainingDistance > 15)
-                {
-
-
-                    StartCoroutine(wait());
-                    GetComponent<Animator>().SetFloat("Forward", 1);
-                    GetComponent<Animator>().SetBool("IsShooting", false);
-
-                }
-                else
-                {
-                    GetComponent<Animator>().SetFloat("Forward", 0);
-                    GetComponent<Animator>().SetBool("IsShooting", true);
-                }
+                GetComponent<Animator>().SetFloat("Forward", 0);
+                GetComponent<Animator>().SetBool("IsShooting", false);
+                GetComponent<Animator>().SetBool("IsPunching", false);
+                GetComponent<Animator>().SetBool("IsPlayerDead", true);
+                
             }
 
         }
        public void shoot()
         {
             Transform newBullet = (Transform)Instantiate(bullet, transform.position + transform.forward + new Vector3(0, 1, 0), transform.rotation * Quaternion.Euler(0, 90, 90));
-            
+            revolver.GetComponent<AudioSource>().Play();
            newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 200000);
         }
         public void SetTarget(Transform target)

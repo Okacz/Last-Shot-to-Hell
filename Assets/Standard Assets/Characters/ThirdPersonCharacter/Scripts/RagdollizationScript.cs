@@ -4,13 +4,25 @@ using System.Collections;
 public class RagdollizationScript : MonoBehaviour {
     public void RagdollizePlayer()
     {
-        GetComponent<Animator>().enabled = false;
-
         foreach (CapsuleCollider a in GetComponentsInChildren<CapsuleCollider>())
         {
             a.enabled = true;
         }
-        
+        foreach (BoxCollider a in GetComponentsInChildren<BoxCollider>())
+        {
+            a.enabled = false;
+        }
+        foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
+        {
+            b.enableProjection = true;
+
+
+        }
+        GetComponent<BoxCollider>().enabled = false;
+        GetComponent<ThirdPersonCharacter>().enabled = false;
+        GetComponent<NavMeshObstacle>().enabled = false;
+        GetComponent<ThirdPersonUserControl>().enabled = false;
+        GetComponent<Animator>().enabled = false;
 
         foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
         {
@@ -23,16 +35,10 @@ public class RagdollizationScript : MonoBehaviour {
             }
 
         }
-        tag = "Untagged";
-        GetComponent<Rigidbody>().isKinematic = true;
         
-        GetComponent<BoxCollider>().enabled = false;
-        foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
-        {
-            b.enableProjection = true;
-
-
-        }
+        GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<CapsuleCollider>().enabled = false;
+        
         
     }
 	public void Ragdollize()
@@ -58,7 +64,10 @@ public class RagdollizationScript : MonoBehaviour {
             {
             
             }
-
+            if (b.name == "EnemyArm")
+            {
+                b.name = "DeadEnemyArm";
+            }
         }
         tag = "Untagged";
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
@@ -106,7 +115,10 @@ public class RagdollizationScript : MonoBehaviour {
 
                 //
             }
-
+            if (b.name == "EnemyArm")
+            {
+                b.name = "DeadEnemyArm";
+            }
         }
 
         tag = "Untagged";
@@ -129,6 +141,7 @@ public class RagdollizationScript : MonoBehaviour {
     }
     public void Ragdollize(Collider aa, float force)
     {
+        
         GetComponent<Animator>().enabled = false;
         GetComponent<NavMeshAgent>().enabled = false;
 
@@ -153,6 +166,10 @@ public class RagdollizationScript : MonoBehaviour {
                 //GetComponent<Rigidbody>().AddExplosionForce(500, aa.transform.position, 10);
                
                 //
+            }
+            if(b.name=="EnemyArm")
+            {
+                b.name = "DeadEnemyArm";
             }
 
         }

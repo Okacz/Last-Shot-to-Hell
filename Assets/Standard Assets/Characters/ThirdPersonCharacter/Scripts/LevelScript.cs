@@ -10,7 +10,6 @@ public class LevelScript : MonoBehaviour {
     public GameObject Exit;
     public GameObject Trigger;
     public GameObject Player;
-	// Use this for initialization
 	void Start () {
         if(!isStartLevel)
         {

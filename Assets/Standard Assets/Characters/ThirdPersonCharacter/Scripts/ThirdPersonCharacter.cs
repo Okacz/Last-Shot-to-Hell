@@ -11,7 +11,7 @@ using UnityEngine.UI;
 		[SerializeField] float m_StationaryTurnSpeed = 180;
 		[SerializeField] float m_JumpPower = 12f;
 		[Range(1f, 4f)][SerializeField] float m_GravityMultiplier = 2f;
-		[SerializeField] float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
+		[SerializeField] float m_RunCycleLegOffset = 0.2f;
 		[SerializeField] float m_MoveSpeedMultiplier = 1f;
 		[SerializeField] float m_AnimSpeedMultiplier = 1f;
 		[SerializeField] float m_GroundCheckDistance = 0.1f;
@@ -33,7 +33,7 @@ using UnityEngine.UI;
         bool isTwisted = false;
         Vector3 mainCameraPosition;
         Quaternion mainCameraRotation;
-        private float health;
+        public float health;
         public float maxHealth;
         public float invulnerabilityTime;
         bool invulnerable = false;
@@ -204,7 +204,7 @@ using UnityEngine.UI;
             if (Physics.Raycast(ray, out cameraRayHit))
             {
                 Quaternion interpolatedRotation=new Quaternion(0, 0, 0, 0);
-                if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (shotgun)") || this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (rifle)"))
+                if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1).IsName("Bang (shotgun)") || this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (rifle)"))
                 {
                     Vector3 targetPosition;
                     if (cameraRayHit.transform.tag != "Enemy")
@@ -292,7 +292,7 @@ using UnityEngine.UI;
             }
             LookAtCursor(); //Kod na patrzenie w kierunku kursora, usun¹æ dla sterowania bez myszki
             
-            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (revolver)"))
+            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1).IsName("Bang (revolver)"))
             {
                 if(hasShot==false)
                 {
@@ -303,7 +303,7 @@ using UnityEngine.UI;
                 }
                 
             }
-            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Bang (shotgun)"))
+            if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1).IsName("Bang (shotgun)"))
             {
                 if (hasShot == false)
                 {
@@ -326,7 +326,7 @@ using UnityEngine.UI;
             }
             if (Input.GetKeyDown(KeyCode.R))
             {
-                if(camera.transform.position!=new Vector3(-4, -40, -10))
+                /*if(camera.transform.position!=new Vector3(-4, -40, -10))
                 {
                 Vector3 targetPosition = new Vector3(-4, -40, -10);
                 camera.transform.position = targetPosition;
@@ -338,7 +338,8 @@ using UnityEngine.UI;
                 camera.transform.position = mainCameraPosition;
                
                 camera.transform.rotation = mainCameraRotation;
-                }
+                }*/
+                GetComponent<RagdollizationScript>().RagdollizePlayer();
             }
             if (Input.GetKeyDown(KeyCode.P))
             {
@@ -426,7 +427,7 @@ using UnityEngine.UI;
     public void die()
     {
         mainCameraPosition = (camera.transform.position - transform.FindChild("Cowboy").FindChild("CG").FindChild("Pelvis").FindChild("Spine").transform.position) / 3;
-        Time.timeScale = 0.2f;
+        //Time.timeScale = 0.2f;
         GetComponent<RagdollizationScript>().RagdollizePlayer();
     }
     public void Damage(int newHealth)
@@ -495,13 +496,13 @@ using UnityEngine.UI;
         }
         public void Move(Vector3 move, bool crouch, bool jump)
 		{
-           
 
 
 
 
 
 
+            m_Rigidbody.velocity = move * m_MoveSpeedMultiplier;
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
@@ -532,6 +533,7 @@ using UnityEngine.UI;
 			PreventStandingInLowHeadroom();
 
 			// send input and other state parameters to the animator
+            
 			UpdateAnimator(move);
 		}
 
@@ -621,7 +623,7 @@ using UnityEngine.UI;
 		{
 			// apply extra gravity from multiplier:
 			Vector3 extraGravityForce = (Physics.gravity * m_GravityMultiplier) - Physics.gravity;
-			m_Rigidbody.AddForce(extraGravityForce);
+			//m_Rigidbody.AddForce(extraGravityForce);
 
 			m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.01f;
 		}
@@ -630,14 +632,14 @@ using UnityEngine.UI;
 		void HandleGroundedMovement(bool crouch, bool jump)
 		{
 			// check whether conditions are right to allow a jump:
-			if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
+			/*if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
 			{
 				// jump!
 				m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
 				m_IsGrounded = false;
 				m_Animator.applyRootMotion = false;
 				m_GroundCheckDistance = 0.1f;
-			}
+			}*/
 		}
 
 		void ApplyExtraTurnRotation()
@@ -659,7 +661,7 @@ using UnityEngine.UI;
                 
 				// we preserve the existing y part of the current velocity.
 				v.y = m_Rigidbody.velocity.y;
-				m_Rigidbody.velocity = v;
+				//m_Rigidbody.velocity = v;
                 
 			}
 		}
