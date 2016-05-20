@@ -298,7 +298,7 @@ using UnityEngine.UI;
                 {
                     revolver.GetComponent<AudioSource>().Play();
                     Transform newBullet = (Transform)Instantiate(bullet, transform.position+transform.forward+new Vector3(0, 1, 0), transform.rotation*Quaternion.Euler(0, 90, 90));
-                    newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 200000);
+                    newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 600000);
                     hasShot = true;
                 }
                 
@@ -311,12 +311,12 @@ using UnityEngine.UI;
                     for(int i=0; i<9; i++)
                     {
                         
-                        Quaternion zmiana=Quaternion.Euler(0, -18+(i*5), 0);
+                        Quaternion zmiana=Quaternion.Euler(0, -9+(i*5), 0);
                         Vector3 vzmiana = new Vector3(0, -18 + (i * 5), 0);
                         Transform newBullet = (Transform)Instantiate(bullet, transform.position + transform.forward + new Vector3(0, 1, 0), transform.rotation * Quaternion.Euler(0, -65, 0) * zmiana * Quaternion.Euler(0, 90, 90));
                         //newBullet.localScale = new Vector3(0.3f, 0.3f, 0.3f);
                         newBullet.GetComponent<Rigidbody>().mass = 400;
-                        newBullet.GetComponent<Rigidbody>().AddForce(newBullet.transform.up * 500000);
+                        newBullet.GetComponent<Rigidbody>().AddForce(newBullet.transform.up * 1000000);
                         
                     }
                     
@@ -326,29 +326,14 @@ using UnityEngine.UI;
             }
             if (Input.GetKeyDown(KeyCode.R))
             {
-                /*if(camera.transform.position!=new Vector3(-4, -40, -10))
-                {
-                Vector3 targetPosition = new Vector3(-4, -40, -10);
-                camera.transform.position = targetPosition;
-                Quaternion targetRotation = Quaternion.Euler(new Vector3(89, -90, 0));
-                camera.transform.rotation = targetRotation;
-                }
-                else
-                {
-                camera.transform.position = mainCameraPosition;
-               
-                camera.transform.rotation = mainCameraRotation;
-                }*/
+                
                 GetComponent<RagdollizationScript>().RagdollizePlayer();
             }
             if (Input.GetKeyDown(KeyCode.P))
             {
                 Application.LoadLevel("scena1");
             }
-            /*if (Input.GetKeyDown(KeyCode.Q))
-            {
-                m_Animator.SetTrigger("New Trigger");
-            }*/
+            
             if (Input.GetKey(KeyCode.E))
             {
                 m_Animator.SetBool("Punching", true);

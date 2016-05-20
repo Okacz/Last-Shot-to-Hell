@@ -135,7 +135,7 @@ public enum Type
                 {
 
 
-                    if (agent.remainingDistance > 15)
+                    if (agent.remainingDistance > 10)
                     {
                         if(!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Shooting")){
                         agent.speed = 4;
@@ -162,7 +162,7 @@ public enum Type
                 GetComponent<Animator>().SetBool("IsShooting", false);
                 GetComponent<Animator>().SetBool("IsPunching", false);
                 GetComponent<Animator>().SetBool("IsPlayerDead", true);
-                
+                agent.ResetPath();
             }
 
         }

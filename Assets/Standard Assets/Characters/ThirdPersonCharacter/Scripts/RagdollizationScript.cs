@@ -31,7 +31,7 @@ public class RagdollizationScript : MonoBehaviour {
             b.isKinematic = false;
             if (b.name == "Spine1")
             {
-
+                b.AddForce(Vector3.down*50, ForceMode.Impulse);
             }
 
         }

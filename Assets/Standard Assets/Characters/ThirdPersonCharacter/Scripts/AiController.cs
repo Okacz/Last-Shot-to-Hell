@@ -69,7 +69,7 @@ public class AiController : MonoBehaviour {
                 dead = true;
                 
             }
-            
+            Destroy(a.gameObject);
             
         }
         /*if (GetComponentInParent<Animation>().IsPlaying("attack1"))
