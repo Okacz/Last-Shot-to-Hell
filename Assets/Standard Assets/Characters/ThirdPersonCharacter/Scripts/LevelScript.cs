@@ -11,8 +11,11 @@ public class LevelScript : MonoBehaviour {
     public GameObject Exit;
     public GameObject Trigger;
     public GameObject Player;
+    public GameObject AmmoPack;
+    public GameObject HealthPack;
     int TimeActive;
-	void Start () {
+	void Start ()
+    {
         TimeActive=0;
         if(!isStartLevel)
         {
@@ -87,6 +90,8 @@ public class LevelScript : MonoBehaviour {
             if (b == true)
             {
                 Exit.SetActive(false);
+                AmmoPack.SetActive(true);
+                HealthPack.SetActive(true);
                 isFinished = true;
             }
             

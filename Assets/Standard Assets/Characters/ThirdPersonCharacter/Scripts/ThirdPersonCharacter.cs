@@ -41,10 +41,10 @@ using UnityEngine.UI;
         public float shotgunCooldown;
         private bool isRevolverCD = false;
         private bool isShotgunCD = false;
-        int revolverAmmo = 0;
-        int shotgunAmmo = 0;
-        int dynamiteAmmo = 0;
-        int healthTxt = 100;
+        public int revolverAmmo = 0;
+        public int shotgunAmmo = 0;
+        public int dynamiteAmmo = 0;
+        public int healthTxt = 100;
 
 
         public GameObject weaponPanels;
@@ -66,7 +66,7 @@ using UnityEngine.UI;
             Dynamite = 4
         };
         Weapons currentWeapon;
-        void UpdateAmmo()
+        public void UpdateAmmo()
         {
             foreach (Transform child in weaponPanels.transform)
             {
@@ -462,7 +462,7 @@ using UnityEngine.UI;
         }
         
     }
-    void UpdateHealth()
+    public void UpdateHealth()
         {
         healthText.gameObject.GetComponent<Text>().text = healthTxt.ToString();
         //healthText.text = "HP: " + health;
