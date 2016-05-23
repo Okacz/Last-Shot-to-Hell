@@ -159,7 +159,7 @@ public class RagdollizationScript : MonoBehaviour {
             b.freezeRotation = false;
             b.isKinematic = false;
             
-            if (b.name == "Pelvis")
+            if (b.name == "Pelvis"||b.name=="mixamorig:Hips")
             {
                 //b.GetComponent<Rigidbody>().AddForce((transform.up + new Vector3(0, 0.5f, 0)) * GetComponent<Rigidbody>().mass * 10000);
                 b.GetComponent<Rigidbody>().AddForce(aa.transform.up  * 1000*force);
