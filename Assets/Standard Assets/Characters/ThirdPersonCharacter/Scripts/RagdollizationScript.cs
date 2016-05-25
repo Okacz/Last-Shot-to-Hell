@@ -4,42 +4,50 @@ using System.Collections;
 public class RagdollizationScript : MonoBehaviour {
     public void RagdollizePlayer()
     {
-        foreach (CapsuleCollider a in GetComponentsInChildren<CapsuleCollider>())
+        foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
         {
-            a.enabled = true;
+            b.mass = b.mass * 10000;
         }
-        foreach (BoxCollider a in GetComponentsInChildren<BoxCollider>())
-        {
-            a.enabled = false;
-        }
-        foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
-        {
-            b.enableProjection = true;
-
-
-        }
+        GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<BoxCollider>().enabled = false;
         GetComponent<ThirdPersonCharacter>().enabled = false;
         GetComponent<NavMeshObstacle>().enabled = false;
         GetComponent<ThirdPersonUserControl>().enabled = false;
         GetComponent<Animator>().enabled = false;
-
+        
+        StartCoroutine(GetUpPlayer());
+        
+    }
+    public void RagdollizePlayer(Collider aa, float force)
+    {
         foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
         {
-
-            b.freezeRotation = false;
-            b.isKinematic = false;
-            if (b.name == "Spine1")
-            {
-                b.AddForce(Vector3.down*50, ForceMode.Impulse);
-            }
-
+            b.mass = b.mass*1000;
         }
-        
-        GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
-        
-        
+        GetComponent<BoxCollider>().enabled = false;
+        GetComponent<ThirdPersonCharacter>().enabled = false;
+        GetComponent<NavMeshObstacle>().enabled = false;
+        GetComponent<ThirdPersonUserControl>().enabled = false;
+        GetComponent<Animator>().enabled = false;
+        foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
+        {
+            b.enableProjection = true;
+        }
+        foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
+        {
+           
+            if (b.name == "Pelvis" || b.name == "mixamorig:Hips")
+            {
+                //b.GetComponent<Rigidbody>().AddForce((transform.up + new Vector3(0, 0.5f, 0)) * GetComponent<Rigidbody>().mass * 10000);
+                b.GetComponent<Rigidbody>().AddForce(aa.transform.up  * force*1000);
+                //b.GetComponent<Rigidbody>().AddExplosionForce(force, aa.transform.position, 100, 1, ForceMode.Impulse);
+
+            }
+            
+        }
+        StartCoroutine(GetUpPlayer());
+
     }
 	public void Ragdollize()
     {
@@ -68,6 +76,11 @@ public class RagdollizationScript : MonoBehaviour {
             {
                 b.name = "DeadEnemyArm";
             }
+            if (b.name == "FatArm")
+            {
+                b.name = "DeadFatArm";
+            }
+            b.mass = b.mass * 1000;
         }
         tag = "Untagged";
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
@@ -101,7 +114,8 @@ public class RagdollizationScript : MonoBehaviour {
         {
             a.enabled = true;
         }
-
+        GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<CapsuleCollider>().enabled = false;
         foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
         {
             b.freezeRotation = false;
@@ -119,6 +133,11 @@ public class RagdollizationScript : MonoBehaviour {
             {
                 b.name = "DeadEnemyArm";
             }
+            if (b.name == "FatArm")
+            {
+                b.name = "DeadFatArm";
+            }
+            b.mass = b.mass * 1000;
         }
 
         tag = "Untagged";
@@ -171,9 +190,12 @@ public class RagdollizationScript : MonoBehaviour {
             {
                 b.name = "DeadEnemyArm";
             }
-
+            if (b.name == "FatArm")
+            {
+                b.name = "DeadFatArm";
+            }
+            b.mass = b.mass * 1000;
         }
-        
         tag = "Untagged";
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         GetComponent<Rigidbody>().isKinematic = true;
@@ -205,7 +227,46 @@ public class RagdollizationScript : MonoBehaviour {
             }
             GetComponent<AICharacterControl>().enabled = true;
     }
-    
+    IEnumerator GetUpPlayer()
+    {
+        print("getting up");
+        yield return new WaitForSeconds(1.0f);
+        if (GetComponent<ThirdPersonCharacter>().health > 0)
+        {
+            UnragdollizePlayer();
+        }
+        else
+        {
+            yield return new WaitForSeconds(1.0f);
+            Application.LoadLevel("main_menu");
+        }
+    }
+    public void UnragdollizePlayer()
+    {
+        foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
+        {
+            b.mass = b.mass / 10000;
+        }
+        Vector3 position2 = Vector3.zero;
+        foreach (Transform child in GetComponentsInChildren<Transform>())
+        {
+            if (child.name == "L Foot")
+            {
+                position2 = child.position;
+            }
+
+        }
+        
+        transform.position = position2;
+        transform.position = new Vector3(transform.position.x, -47.37f, transform.position.z);
+        GetComponent<Rigidbody>().isKinematic = false;
+        GetComponent<CapsuleCollider>().enabled = true;
+        GetComponent<BoxCollider>().enabled = true;
+        GetComponent<ThirdPersonCharacter>().enabled = true;
+        GetComponent<NavMeshObstacle>().enabled = true;
+        GetComponent<ThirdPersonUserControl>().enabled = true;
+        GetComponent<Animator>().enabled = true;
+    }
     public void Unragdollize()
     {
         Vector3 position2=Vector3.zero;

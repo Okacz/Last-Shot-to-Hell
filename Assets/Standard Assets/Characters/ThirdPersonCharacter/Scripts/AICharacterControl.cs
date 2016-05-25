@@ -18,6 +18,7 @@ public enum Type
         public Type Typ;
         public Transform revolver;
         public Transform bullet;
+        float speed;
         Quaternion newrotation = Quaternion.Euler(0, 180, 0);
         NavMeshObstacle obstacle;
         // Use this for initialization
@@ -39,6 +40,11 @@ public enum Type
             agent.acceleration = 1000;
             agent.autoBraking = false;
             agent.angularSpeed = 1000;
+            if(this.name.StartsWith("RagDoll"))
+            {
+                agent.speed = 4;
+            }
+            speed = agent.speed;
         }
 
 
@@ -116,7 +122,7 @@ public enum Type
                     {
                         if(!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punching"))
                         {
-                        agent.speed = 4;
+                        agent.speed = speed;
 
                         }
                         StartCoroutine(wait());
@@ -138,7 +144,7 @@ public enum Type
                     if (agent.remainingDistance > 10)
                     {
                         if(!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Shooting")){
-                        agent.speed = 4;
+                        agent.speed = speed;
 
                         }
                         StartCoroutine(wait());

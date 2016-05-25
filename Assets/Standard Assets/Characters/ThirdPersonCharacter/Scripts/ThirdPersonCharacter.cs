@@ -41,6 +41,7 @@ using UnityEngine.UI;
         public float shotgunCooldown;
         private bool isRevolverCD = false;
         private bool isShotgunCD = false;
+        bool moveable = true;
         public int revolverAmmo = 0;
         public int shotgunAmmo = 0;
         public int dynamiteAmmo = 0;
@@ -100,7 +101,7 @@ using UnityEngine.UI;
             //healthText.transform.FindChild("HealthText").gameObject.SetActive(true);
             revolverAmmo = 100;
             shotgunAmmo = 10;
-            dynamiteAmmo = 10;
+            dynamiteAmmo = 0;
             UpdateAmmo();
             currentWeapon = Weapons.Revolver;
             mainCameraPosition = camera.transform.position - transform.position;
@@ -250,6 +251,14 @@ using UnityEngine.UI;
                 
             }
         }
+        IEnumerator restrictMovement(float time)
+        {
+            moveable = false;
+            print("stop");
+            yield return new WaitForSeconds(time*10);
+            moveable = true;
+            print("start");
+        }
         IEnumerator revolverShotCooldown()
         {
             isRevolverCD = true;
@@ -282,15 +291,8 @@ using UnityEngine.UI;
         }
         void Update()
         {
-            if(health>0)
-            {
-                camera.transform.position = transform.position + mainCameraPosition;
-            }
-            else
-            {
-                camera.transform.position = transform.FindChild("Cowboy").FindChild("CG").FindChild("Pelvis").FindChild("Spine").transform.position + mainCameraPosition;
-            }
-            LookAtCursor(); //Kod na patrzenie w kierunku kursora, usun¹æ dla sterowania bez myszki
+            
+            LookAtCursor(); 
             
             if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1).IsName("Bang (revolver)"))
             {
@@ -353,6 +355,9 @@ using UnityEngine.UI;
             }
             if(Input.GetButtonDown("Fire1")&&currentWeapon!=Weapons.Dynamite&&isRevolverCD==false)
             {
+                if((currentWeapon==Weapons.Shotgun&&shotgunAmmo>0)||(currentWeapon==Weapons.Revolver&&revolverAmmo>0))
+                {
+
                 if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punch"))
                 {
                     m_Animator.SetBool("Shooting", true);
@@ -363,8 +368,9 @@ using UnityEngine.UI;
                     
                     isTwisted = true;
                 }
+                }
             }
-            if (Input.GetButtonDown("Fire1")&&currentWeapon==Weapons.Dynamite)
+            if (Input.GetButtonDown("Fire1")&&currentWeapon==Weapons.Dynamite&&dynamiteAmmo>0)
             {
                 
                     m_Animator.SetBool("Shooting", true);
@@ -451,7 +457,7 @@ using UnityEngine.UI;
             invulnerable = false;
 
         }
-
+        
     }
     void OnTriggerEnter(Collider a)
     {
@@ -459,6 +465,19 @@ using UnityEngine.UI;
         {
             
             Damage(10);
+        }
+        if (a.name == "FatArm")
+        {
+
+            Damage(40);
+            GetComponent<RagdollizationScript>().RagdollizePlayer(a, 10000);
+            //GetComponent<Rigidbody>().AddExplosionForce(300000, a.transform.position, 1000, 0, ForceMode.Impulse);
+            //StartCoroutine(restrictMovement(0.03f));
+            
+            /*foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
+            {
+                b.GetComponent<Rigidbody>().AddExplosionForce(10000, a.transform.position, 100, 0, ForceMode.Impulse);
+            }*/
         }
         
     }
@@ -476,9 +495,6 @@ using UnityEngine.UI;
     }
 
 
-    void CanSeePlayer() {
-            
-        }
         public void Move(Vector3 move, bool crouch, bool jump)
 		{
 
@@ -486,8 +502,10 @@ using UnityEngine.UI;
 
 
 
-
+            if(moveable==true)
+            {
             m_Rigidbody.velocity = move * m_MoveSpeedMultiplier;
+            }
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
@@ -571,10 +589,10 @@ using UnityEngine.UI;
             
 			//m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
 			m_Animator.SetBool("Crouch", m_Crouching);
-			m_Animator.SetBool("OnGround", m_IsGrounded);
+			//m_Animator.SetBool("OnGround", m_IsGrounded);
 			if (!m_IsGrounded)
 			{
-				m_Animator.SetFloat("Jump", m_Rigidbody.velocity.y);
+				//m_Animator.SetFloat("Jump", m_Rigidbody.velocity.y);
 			}
 
 			// calculate which leg is behind, so as to leave that leg trailing in the jump animation
@@ -607,8 +625,8 @@ using UnityEngine.UI;
 		void HandleAirborneMovement()
 		{
 			// apply extra gravity from multiplier:
-			Vector3 extraGravityForce = (Physics.gravity * m_GravityMultiplier) - Physics.gravity;
-			//m_Rigidbody.AddForce(extraGravityForce);
+			Vector3 extraGravityForce = (Physics.gravity * m_GravityMultiplier*10000);
+			m_Rigidbody.AddForce(extraGravityForce);
 
 			m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.01f;
 		}
@@ -617,14 +635,14 @@ using UnityEngine.UI;
 		void HandleGroundedMovement(bool crouch, bool jump)
 		{
 			// check whether conditions are right to allow a jump:
-			/*if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
+			if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
 			{
 				// jump!
 				m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
 				m_IsGrounded = false;
 				m_Animator.applyRootMotion = false;
 				m_GroundCheckDistance = 0.1f;
-			}*/
+			}
 		}
 
 		void ApplyExtraTurnRotation()
@@ -632,23 +650,6 @@ using UnityEngine.UI;
 			// help the character turn faster (this is in addition to root rotation in the animation)
 			float turnSpeed = Mathf.Lerp(m_StationaryTurnSpeed, m_MovingTurnSpeed, m_ForwardAmount);
 			transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
-		}
-
-
-		public void OnAnimatorMove()
-		{
-			// we implement this function to override the default root motion.
-			// this allows us to modify the positional speed before it's applied.
-			if (m_IsGrounded && Time.deltaTime > 0)
-			{
-
-                Vector3 v = (m_Animator.deltaPosition * m_MoveSpeedMultiplier) / Time.deltaTime;
-                
-				// we preserve the existing y part of the current velocity.
-				v.y = m_Rigidbody.velocity.y;
-				//m_Rigidbody.velocity = v;
-                
-			}
 		}
 
         
@@ -665,7 +666,8 @@ using UnityEngine.UI;
 			{
 				m_GroundNormal = hitInfo.normal;
 				m_IsGrounded = true;
-				m_Animator.applyRootMotion = true;
+                print("grounded");
+				//m_Animator.applyRootMotion = true;
 			}
 			else
 			{

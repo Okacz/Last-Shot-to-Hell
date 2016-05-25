@@ -54,6 +54,10 @@ public class BanditSpawner : MonoBehaviour {
             {
                 bandit1.GetComponent<AICharacterControl>().Typ = Type.Revolver;
             }
+            else
+            {
+                bandit1.GetComponent<AICharacterControl>().Typ = Type.Melee;
+            }
             print("instantiated");
             listaBandytów.Add(bandit1);
             print("added");
