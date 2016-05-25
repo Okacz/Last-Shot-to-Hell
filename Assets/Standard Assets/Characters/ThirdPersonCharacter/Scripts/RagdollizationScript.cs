@@ -245,7 +245,7 @@ public class RagdollizationScript : MonoBehaviour {
     {
         foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
         {
-            b.mass = b.mass / 10000;
+            b.mass = b.mass / 1000;
         }
         Vector3 position2 = Vector3.zero;
         foreach (Transform child in GetComponentsInChildren<Transform>())
@@ -266,7 +266,11 @@ public class RagdollizationScript : MonoBehaviour {
         GetComponent<NavMeshObstacle>().enabled = true;
         GetComponent<ThirdPersonUserControl>().enabled = true;
         GetComponent<Animator>().enabled = true;
+        GetComponent<Animator>().SetBool("Getting up", true);
+        GetComponent<Rigidbody>().mass = 10000;
+        //GetComponent<Animator>().SetBool("Getting up", false);
     }
+    
     public void Unragdollize()
     {
         Vector3 position2=Vector3.zero;

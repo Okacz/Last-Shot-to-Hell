@@ -41,7 +41,7 @@ using UnityStandardAssets.CrossPlatformInput;
             }
         }
 
-
+        
         // Fixed update is called in sync with physics
         private void FixedUpdate()
         {

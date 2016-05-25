@@ -95,6 +95,11 @@ using UnityEngine.UI;
             }
             
         }
+        public void endGettingUp()
+        {
+            GetComponent<Animator>().SetBool("Getting up", false);
+            m_Animator.SetInteger("Weapon", (int)currentWeapon);
+        }
 		void Start()
 		{
             weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(true);
@@ -196,7 +201,7 @@ using UnityEngine.UI;
             }
                 
         }
-
+        
         
         void LookAtCursor()
         {
@@ -466,18 +471,10 @@ using UnityEngine.UI;
             
             Damage(10);
         }
-        if (a.name == "FatArm")
+        if (a.name == "FatArm"&&!m_Animator.GetBool("Getting up")&&!m_Animator.enabled==false)
         {
-
             Damage(40);
             GetComponent<RagdollizationScript>().RagdollizePlayer(a, 10000);
-            //GetComponent<Rigidbody>().AddExplosionForce(300000, a.transform.position, 1000, 0, ForceMode.Impulse);
-            //StartCoroutine(restrictMovement(0.03f));
-            
-            /*foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
-            {
-                b.GetComponent<Rigidbody>().AddExplosionForce(10000, a.transform.position, 100, 0, ForceMode.Impulse);
-            }*/
         }
         
     }
@@ -532,8 +529,8 @@ using UnityEngine.UI;
 				HandleAirborneMovement();
 			}
 
-			ScaleCapsuleForCrouching(crouch);
-			PreventStandingInLowHeadroom();
+			//ScaleCapsuleForCrouching(crouch);
+			//PreventStandingInLowHeadroom();
 
 			// send input and other state parameters to the animator
             
@@ -543,7 +540,7 @@ using UnityEngine.UI;
 
 		void ScaleCapsuleForCrouching(bool crouch)
 		{
-			if (m_IsGrounded && crouch)
+			/*if (m_IsGrounded && crouch)
 			{
 				if (m_Crouching) return;
 				m_Capsule.height = m_Capsule.height / 2f;
@@ -562,7 +559,7 @@ using UnityEngine.UI;
 				m_Capsule.height = m_CapsuleHeight;
 				m_Capsule.center = m_CapsuleCenter;
 				m_Crouching = false;
-			}
+			}*/
 		}
 
 		void PreventStandingInLowHeadroom()
