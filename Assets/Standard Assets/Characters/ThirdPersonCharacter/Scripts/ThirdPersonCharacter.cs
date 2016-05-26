@@ -255,22 +255,23 @@ using UnityEngine.UI;
                 }
                 
             }
+            transform.eulerAngles = new Vector3(
+                            0,
+                            transform.eulerAngles.y,
+                            0
+                            );
         }
         IEnumerator restrictMovement(float time)
         {
             moveable = false;
-            print("stop");
             yield return new WaitForSeconds(time*10);
             moveable = true;
-            print("start");
         }
         IEnumerator revolverShotCooldown()
         {
             isRevolverCD = true;
-            print("Czekam");
             yield return new WaitForSeconds(revolverCooldown);
             isRevolverCD = false;
-            print("Koniec");
         }
         IEnumerator shotgunShotCooldown()
         {
@@ -293,6 +294,10 @@ using UnityEngine.UI;
             }
             UpdateAmmo();
             
+        }
+        void PortToBoss()
+        {
+            transform.position = new Vector3(34, -47.37f, -198f);
         }
         void Update()
         {
@@ -333,8 +338,8 @@ using UnityEngine.UI;
             }
             if (Input.GetKeyDown(KeyCode.R))
             {
-                
-                GetComponent<RagdollizationScript>().RagdollizePlayer();
+
+                PortToBoss();
             }
             if (Input.GetKeyDown(KeyCode.P))
             {
@@ -412,7 +417,6 @@ using UnityEngine.UI;
                Vector3 targetPosition = new Vector3(cameraRayHit.point.x, transform.position.y, cameraRayHit.point.z);
                power = Vector3.Distance(targetPosition, transform.position);
                
-               print("power: "+power);
             }
             newDynamite.GetComponent<Rigidbody>().AddForce(transform.forward * 70*power);
 
@@ -438,7 +442,6 @@ using UnityEngine.UI;
         UpdateHealth();
         if (health <= 0 && respawned == false)
         {
-            print("posz³o die take");
             die();
         }
     }*/
@@ -453,7 +456,6 @@ using UnityEngine.UI;
             UpdateHealth();
             if (health <= 0)
             {
-                //print("posz³o die enum");
                 die();
             }
             else
@@ -476,19 +478,17 @@ using UnityEngine.UI;
             Damage(40);
             GetComponent<RagdollizationScript>().RagdollizePlayer(a, 10000);
         }
+        if (a.name == "BossPickaxe" && !m_Animator.GetBool("Getting up") && !m_Animator.enabled == false)
+        {
+            Damage(50);
+            GetComponent<RagdollizationScript>().RagdollizePlayer(a, 10000);
+        }
         
     }
     public void UpdateHealth()
         {
         healthText.gameObject.GetComponent<Text>().text = healthTxt.ToString();
-        //healthText.text = "HP: " + health;
-
-        /*float oldX = healthBar.transform.position.x;
-        float oldW = healthBar.GetComponent<RectTransform>().rect.width;
-        float w = maxBarLength * (health / maxHealth);
-        float h = healthBar.GetComponent<RectTransform>().rect.height;
-        healthBar.GetComponent<RectTransform>().sizeDelta = new Vector2(w, h);
-        healthBar.transform.Translate(new Vector3((-oldW + w) / 2, 0, 0));*/
+        
     }
 
 
@@ -514,7 +514,6 @@ using UnityEngine.UI;
 			m_ForwardAmount = move.z;
             m_LeftAmount = move.x;
             //m_Rigidbody.velocity = transform.forward * 10;
-            //print("movex = " + move.x + " movez =" + move.z);
             //GetComponent<CharacterController>().Move(new Vector3(m_ForwardAmount, 0, m_LeftAmount)*0.1f);
             
 			//ApplyExtraTurnRotation();
@@ -540,26 +539,7 @@ using UnityEngine.UI;
 
 		void ScaleCapsuleForCrouching(bool crouch)
 		{
-			/*if (m_IsGrounded && crouch)
-			{
-				if (m_Crouching) return;
-				m_Capsule.height = m_Capsule.height / 2f;
-				m_Capsule.center = m_Capsule.center / 2f;
-				m_Crouching = true;
-			}
-			else
-			{
-				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
-				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
-				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength))
-				{
-					m_Crouching = true;
-					return;
-				}
-				m_Capsule.height = m_CapsuleHeight;
-				m_Capsule.center = m_CapsuleCenter;
-				m_Crouching = false;
-			}*/
+			
 		}
 
 		void PreventStandingInLowHeadroom()
@@ -663,7 +643,6 @@ using UnityEngine.UI;
 			{
 				m_GroundNormal = hitInfo.normal;
 				m_IsGrounded = true;
-                print("grounded");
 				//m_Animator.applyRootMotion = true;
 			}
 			else

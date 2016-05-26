@@ -10,7 +10,6 @@ public class Hit : MonoBehaviour {
     int hp = 100;
     void OnTriggerEnter(Collider c)
     {
-        print(c.name);
         if (c.name=="Bullet(Clone)"||c.name=="EnemyBullet(Clone)")
         {
             hp = hp - 25    ;

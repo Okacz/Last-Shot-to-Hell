@@ -23,8 +23,12 @@ public class LevelScript : MonoBehaviour {
             {
                 a.GetComponent<NavMeshAgent>().enabled = false;
                 //a.GetComponent<AiController>().target = Player.transform;
+                if(a.name!="Brute")
+                {
                 a.GetComponent<AICharacterControl>().target =null;
-                
+                }
+                else
+                a.GetComponent<BossCharacterControl>().target = null;
             }
         }
         else
@@ -34,13 +38,16 @@ public class LevelScript : MonoBehaviour {
         
         
 	}
+    public bool checkIfStarted()
+    {
+        return isStarted;
+    }
 	public IEnumerator PassingTime()
         {
             while(isFinished!=true)
             {
             yield return new WaitForSeconds(1);
                 TimeActive++;
-                print(TimeActive);
                 foreach (BanditSpawner bs in BanditSpawners)
                 {
                     if(TimeActive==bs.GetComponent<BanditSpawner>().TimeOfActivation)
@@ -59,10 +66,23 @@ public class LevelScript : MonoBehaviour {
                     StartCoroutine(PassingTime());
                 foreach (Transform a in Enemies)
                 {
-                    
+                    if(a.name!="Brute")
                     a.GetComponent<NavMeshAgent>().enabled = true;
                     //a.GetComponent<AiController>().target = Player.transform;
-                    a.GetComponent<AICharacterControl>().target = Player.transform;
+                    try
+                    {
+                        a.GetComponent<AICharacterControl>().target = Player.transform;
+                    }
+                    catch 
+                    {
+                    }
+                    try
+                    {
+                        a.GetComponent<BossCharacterControl>().target = Player.transform;
+                    }
+                    catch 
+                    {
+                    }
                     Entrance.SetActive(true);
                     print("git");
                 }
