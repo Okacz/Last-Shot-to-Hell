@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 public class LevelScript : MonoBehaviour {
     public bool isStartLevel;
+    public bool isBossLevel;
     private bool isFinished = false;
     private bool isStarted = false;
     public List<Transform> Enemies;
