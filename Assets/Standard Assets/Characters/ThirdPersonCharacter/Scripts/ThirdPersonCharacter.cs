@@ -100,8 +100,10 @@ using UnityEngine.UI;
             GetComponent<Animator>().SetBool("Getting up", false);
             m_Animator.SetInteger("Weapon", (int)currentWeapon);
         }
+        
 		void Start()
 		{
+            
             weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(true);
             //healthText.transform.FindChild("HealthText").gameObject.SetActive(true);
             revolverAmmo = 100;
@@ -312,7 +314,7 @@ using UnityEngine.UI;
                     print("tip: "+revolver.FindChild("RevolverTip").transform.name);
                     Vector3 tip = revolver.FindChild("RevolverTip").transform.position;
                     Transform newBullet = (Transform)Instantiate(bullet, transform.position + transform.forward + new Vector3(0, 1, 0), transform.rotation * Quaternion.Euler(0, 90, 90));
-                    newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 600000);
+                    newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 300000);
                     hasShot = true;
                 }
                 
