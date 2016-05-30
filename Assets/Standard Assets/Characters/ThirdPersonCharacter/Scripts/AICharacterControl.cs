@@ -168,7 +168,7 @@ public enum Type
                 GetComponent<Animator>().SetBool("IsShooting", false);
                 GetComponent<Animator>().SetBool("IsPunching", false);
                 GetComponent<Animator>().SetBool("IsPlayerDead", true);
-                agent.ResetPath();
+                //agent.ResetPath();
             }
 
         }

@@ -22,8 +22,8 @@ public class ammoscript : MonoBehaviour {
             GameObject hero = GameObject.FindGameObjectWithTag("Player");
             ThirdPersonCharacter skrypt = hero.GetComponent<ThirdPersonCharacter>();
             skrypt.revolverAmmo += 18;
-            skrypt.shotgunAmmo += 4;
-            skrypt.dynamiteAmmo += 2;
+            skrypt.shotgunAmmo += 2;
+            skrypt.dynamiteAmmo += 1;
             skrypt.UpdateAmmo();
             gameObject.SetActive(false);
         }
