@@ -7,7 +7,7 @@ public class BossController : MonoBehaviour {
     public Transform target;
     public Transform enemy;
     bool dead = false;
-    public int HP = 40;
+    public int HP;
     //int chase = 1;
 
 	// Use this for initialization
@@ -43,6 +43,11 @@ public class BossController : MonoBehaviour {
     void TakeDamage(int damage)
     {
         HP -= damage;
+        print("au, " + HP);
+    }
+    public float getCurrentHP()
+    {
+        return HP;
     }
     void OnTriggerEnter(Collider a)
     {

@@ -12,7 +12,7 @@ public class BossPlatformScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         log1R = log1.GetComponent<Rigidbody>();
-        log2R = log1.GetComponent<Rigidbody>();
+        log2R = log2.GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame

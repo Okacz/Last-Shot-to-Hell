@@ -64,6 +64,10 @@ public class LevelScript : MonoBehaviour {
         {
             if (Trigger.activeSelf == false&&isStarted==false)
             {
+                if(isBossLevel==true)
+                {
+                    Player.GetComponent<GUIScript>().ActivateBossLevel();
+                }
                     StartCoroutine(PassingTime());
                 foreach (Transform a in Enemies)
                 {
