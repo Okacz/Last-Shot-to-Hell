@@ -164,6 +164,7 @@ public enum Type
             }
             else
             {
+                agent.speed = 0;
                 GetComponent<Animator>().SetFloat("Forward", 0);
                 GetComponent<Animator>().SetBool("IsShooting", false);
                 GetComponent<Animator>().SetBool("IsPunching", false);

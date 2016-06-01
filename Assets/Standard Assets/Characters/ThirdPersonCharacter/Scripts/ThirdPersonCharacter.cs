@@ -314,7 +314,7 @@ using UnityEngine.UI;
                     print("tip: "+revolver.FindChild("RevolverTip").transform.name);
                     Vector3 tip = revolver.FindChild("RevolverTip").transform.position;
                     Transform newBullet = (Transform)Instantiate(bullet, transform.position + transform.forward + new Vector3(0, 1, 0), transform.rotation * Quaternion.Euler(0, 90, 90));
-                    newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 300000);
+                    newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * 600000);
                     hasShot = true;
                 }
                 

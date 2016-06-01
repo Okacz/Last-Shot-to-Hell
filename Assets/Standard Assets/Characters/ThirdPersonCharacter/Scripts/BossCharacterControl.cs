@@ -84,15 +84,18 @@ using UnityEngine;
             Transform newDynamite = (Transform)Instantiate(dynamite, transform.position + transform.forward, transform.rotation * Quaternion.Euler(0, 90, 90));
             float power = Vector3.Distance(target.position, transform.position);
             newDynamite.GetComponent<Rigidbody>().AddForce(transform.forward * 70 * power);
-            StartCoroutine(DynamiteCD());
+            //GetComponent<Animator>().SetBool("IsPunching", false);
+            
         }
         IEnumerator DynamiteCD()
         {
+            //GetComponent<Animator>().SetBool("IsPunching", false);
             isDynamiteOnCD = true;
-            GetComponent<Animator>().SetBool("IsPunching", false);
             yield return new WaitForSeconds(3);
             isDynamiteOnCD = false;
+            
         }
+        
         public void UpdateAnimator()
         {
             if (GetComponentInParent<LevelScript>().checkIfStarted() == true)
@@ -108,9 +111,15 @@ using UnityEngine;
                         if (isDynamiteOnCD == false)
                         {
                             agent.speed = 0;
+                            StartCoroutine(DynamiteCD());
                             GetComponent<Animator>().SetFloat("Forward", 0);
                             GetComponent<Animator>().SetBool("IsPunching", true);
+                            
                             ThrowDynamite();
+                        }
+                        else
+                        {
+                            GetComponent<Animator>().SetBool("IsPunching", false);
                         }
                     }
                     if (stage == 2)
