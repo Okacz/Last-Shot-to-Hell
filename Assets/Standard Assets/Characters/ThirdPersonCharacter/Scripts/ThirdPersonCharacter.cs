@@ -46,6 +46,7 @@ using UnityEngine.UI;
         public int shotgunAmmo = 0;
         public int dynamiteAmmo = 0;
         public int healthTxt = 100;
+        public Vector3 Spawnpoint;
 
 
         public GameObject weaponPanels;
@@ -103,7 +104,7 @@ using UnityEngine.UI;
         
 		void Start()
 		{
-            
+            Spawnpoint = transform.position;
             weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(true);
             //healthText.transform.FindChild("HealthText").gameObject.SetActive(true);
             revolverAmmo = 100;
@@ -128,6 +129,18 @@ using UnityEngine.UI;
             UpdateHealth();
             
         }
+        
+        //----------------------------------------------------------//
+        //respawnowanie sie
+        public void respawn()
+        {
+            //notdead();
+            health = maxHealth;
+            UpdateHealth();
+            transform.position = Spawnpoint;
+        }
+        //----------------------------------------------------------//
+
         int GetEnumValue(bool dir)
         {
             int a = (int)currentWeapon;
