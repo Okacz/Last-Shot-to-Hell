@@ -12,6 +12,7 @@ public class AiController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         target = GameObject.FindGameObjectWithTag("Player").transform;
         target2 = target.GetComponent<ThirdPersonCharacter>();
         /*foreach (CapsuleCollider a in GetComponentsInChildren<CapsuleCollider>())
@@ -48,8 +49,12 @@ public class AiController : MonoBehaviour {
     {
         if(a.name=="KickingFoot")
         {
+            print("damn");
             if(target.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punch"))
-            GetComponent<RagdollizationScript>().Ragdollize(a, 10);
+            {
+                print("damn1");
+                GetComponent<RagdollizationScript>().Ragdollize(a.transform.root.transform.position, 10000);
+            }
         }
         if(a.tag=="Bullet")
         {
@@ -65,7 +70,7 @@ public class AiController : MonoBehaviour {
             if(!dead&&HP<=0)
             {
                 
-                GetComponent<RagdollizationScript>().Ragdollize(a, 4);
+                GetComponent<RagdollizationScript>().Ragdollize(a, 10);
                 dead = true;
                 
             }

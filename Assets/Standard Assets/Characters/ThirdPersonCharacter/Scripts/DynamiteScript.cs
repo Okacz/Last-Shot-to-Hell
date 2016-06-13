@@ -23,7 +23,10 @@ public class DynamiteScript : MonoBehaviour {
             {
                 col.gameObject.GetComponent<AiController>().HP = 0;
                 print(col.transform.name);
-                col.gameObject.SendMessage("Ragdollize");
+                object[] tempStorage = new object[2];
+                tempStorage[0]=transform.position;
+                tempStorage[1]=1000000;
+                col.gameObject.GetComponent<RagdollizationScript>().Ragdollize(transform.position, 10000f);
             }
         }
         print("cjk cd");

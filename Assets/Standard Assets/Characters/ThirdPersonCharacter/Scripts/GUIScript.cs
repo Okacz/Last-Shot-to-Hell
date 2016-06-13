@@ -8,6 +8,8 @@ public class GUIScript : MonoBehaviour {
     public Texture t2;
     public Texture Red;
     public Texture Black;
+    public Texture Revolver;
+    public Texture Shotgun;
     Transform log;
     Transform log2;
     Transform boss;
@@ -22,8 +24,8 @@ public class GUIScript : MonoBehaviour {
     {
         
 
-        GUI.DrawTexture(new Rect(0, Screen.height * 0.75f, 300, 150), t1_1, ScaleMode.ScaleToFit);
-        GUI.BeginGroup(new Rect(0, Screen.height * 0.75f + GetComponent<ThirdPersonCharacter>().health * 1.5f*(-1)+150, 300, 150));
+        GUI.DrawTexture(new Rect(-50, Screen.height * 0.75f, 300, 150), t1_1, ScaleMode.ScaleToFit);
+        GUI.BeginGroup(new Rect(-50, Screen.height * 0.75f + GetComponent<ThirdPersonCharacter>().health * 1.5f*(-1)+150, 300, 150));
         GUI.DrawTexture(new Rect(0, GetComponent<ThirdPersonCharacter>().health * 1.5f-150, 300, 150), t2, ScaleMode.ScaleToFit);
         GUI.EndGroup();
 

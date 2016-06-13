@@ -40,6 +40,7 @@ public enum Type
             agent.acceleration = 1000;
             agent.autoBraking = false;
             agent.angularSpeed = 1000;
+            agent.stoppingDistance = 1.5f;
             if(this.name.StartsWith("RagDoll"))
             {
                 agent.speed = 4;
@@ -118,7 +119,7 @@ public enum Type
                 {
 
                     GetComponent<Animator>().SetBool("IsPlayerDead", false);
-                    if (agent.remainingDistance > 1.8)
+                    if (agent.remainingDistance > 1.5)
                     {
                         if(!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punching"))
                         {

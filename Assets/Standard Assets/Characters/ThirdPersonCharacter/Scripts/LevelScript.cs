@@ -14,9 +14,20 @@ public class LevelScript : MonoBehaviour {
     public GameObject Player;
     public GameObject AmmoPack;
     public GameObject HealthPack;
+    CutsceneScript cutscene;
+
     int TimeActive;
 	void Start ()
     {
+        try
+        {
+
+        cutscene = GetComponent<CutsceneScript>();
+        }
+        catch
+        {
+            cutscene = null;
+        }
         TimeActive=0;
         if(!isStartLevel)
         {
@@ -62,36 +73,83 @@ public class LevelScript : MonoBehaviour {
 	void Update () {
         if(Trigger!=null)
         {
+            
             if (Trigger.activeSelf == false&&isStarted==false)
             {
-                if(isBossLevel==true)
+                if (cutscene != null)
                 {
-                    Player.GetComponent<GUIScript>().ActivateBossLevel();
+
+                    if (cutscene.hasStarted == false)
+                    {
+                        cutscene.StartCutscene(5);
+                    }
                 }
-                    StartCoroutine(PassingTime());
-                foreach (Transform a in Enemies)
+                if (cutscene==null)
                 {
-                    if(a.name!="Brute")
-                    a.GetComponent<NavMeshAgent>().enabled = true;
-                    //a.GetComponent<AiController>().target = Player.transform;
-                    try
+
+                    if(isBossLevel==true)
                     {
-                        a.GetComponent<AICharacterControl>().target = Player.transform;
+                        Player.GetComponent<GUIScript>().ActivateBossLevel();
                     }
-                    catch 
+                        StartCoroutine(PassingTime());
+                    foreach (Transform a in Enemies)
                     {
-                    }
-                    try
-                    {
-                        a.GetComponent<BossCharacterControl>().target = Player.transform;
-                    }
-                    catch 
-                    {
-                    }
-                    Entrance.SetActive(true);
-                    print("git");
+                        if(a.name!="Brute")
+                        a.GetComponent<NavMeshAgent>().enabled = true;
+                        //a.GetComponent<AiController>().target = Player.transform;
+                        try
+                        {
+                            a.GetComponent<AICharacterControl>().target = Player.transform;
+                        }
+                        catch 
+                        {
+                        }
+                        try
+                        {
+                            a.GetComponent<BossCharacterControl>().target = Player.transform;
+                        }
+                        catch 
+                        {
+                        }
+                        Entrance.SetActive(true);
+                        print("git");
                 }
                 isStarted = true;
+                }
+                else
+                {
+                    if(cutscene.isDone==true)
+                    {
+                        if (isBossLevel == true)
+                        {
+                            Player.GetComponent<GUIScript>().ActivateBossLevel();
+                        }
+                        StartCoroutine(PassingTime());
+                        foreach (Transform a in Enemies)
+                        {
+                            if (a.name != "Brute")
+                                a.GetComponent<NavMeshAgent>().enabled = true;
+                            //a.GetComponent<AiController>().target = Player.transform;
+                            try
+                            {
+                                a.GetComponent<AICharacterControl>().target = Player.transform;
+                            }
+                            catch
+                            {
+                            }
+                            try
+                            {
+                                a.GetComponent<BossCharacterControl>().target = Player.transform;
+                            }
+                            catch
+                            {
+                            }
+                            Entrance.SetActive(true);
+                            print("git");
+                        }
+                        isStarted = true;
+                    }
+                }
             }
         }
         

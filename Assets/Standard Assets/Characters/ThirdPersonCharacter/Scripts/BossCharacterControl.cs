@@ -124,8 +124,12 @@ using UnityEngine;
                     }
                     if (stage == 2)
                     {
+                        print("numer 1");
+                        //agent.ResetPath();
+                        agent.SetDestination(target.position);
                         pickaxe.gameObject.SetActive(true);
                         pickaxe.GetComponent<BoxCollider>().enabled = true;
+                        print("numer 2");
                         if (agent.remainingDistance > 1.8)
                         {
                             if (!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Shooting"))
@@ -137,12 +141,14 @@ using UnityEngine;
                             GetComponent<Animator>().SetFloat("Forward", 1);
                             GetComponent<Animator>().SetBool("IsShooting", false);
 
+                            print("numer 3");
                         }
                         else
                         {
                             agent.speed = 2;
                             GetComponent<Animator>().SetFloat("Forward", 0);
                             GetComponent<Animator>().SetBool("IsShooting", true);
+                            print("numer 4"+ agent.remainingDistance);
                         }
                     }
 
@@ -153,7 +159,7 @@ using UnityEngine;
                     GetComponent<Animator>().SetBool("IsShooting", false);
                     GetComponent<Animator>().SetBool("IsPunching", false);
                     GetComponent<Animator>().SetBool("IsPlayerDead", true);
-                    agent.ResetPath();
+                    //agent.ResetPath();
                 }
             }
 

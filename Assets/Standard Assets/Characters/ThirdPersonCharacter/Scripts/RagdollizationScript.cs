@@ -123,6 +123,7 @@ public class RagdollizationScript : MonoBehaviour {
     }
     public void Ragdollize(Vector3 aa, float force)
     {
+        print("explosionragdollize");
         GetComponent<Animator>().enabled = false;
         GetComponent<NavMeshAgent>().enabled = false;
 
@@ -134,7 +135,6 @@ public class RagdollizationScript : MonoBehaviour {
         {
             a.enabled = true;
         }
-        GetComponent<Rigidbody>().isKinematic = true;
         GetComponent<CapsuleCollider>().enabled = false;
         foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
         {
@@ -144,8 +144,8 @@ public class RagdollizationScript : MonoBehaviour {
             if (b.name == "Pelvis")
             {
                 //b.GetComponent<Rigidbody>().AddForce((transform.up + new Vector3(0, 0.5f, 0)) * GetComponent<Rigidbody>().mass * 10000);
-                b.GetComponent<Rigidbody>().AddForce(transform.forward*1000 * force);
-                //GetComponent<Rigidbody>().AddExplosionForce(500, aa.transform.position, 10);
+                //b.GetComponent<Rigidbody>().AddForce(transform.forward*1000 * force);
+                b.GetComponent<Rigidbody>().AddExplosionForce(force, aa, 100);
 
                 //
             }
@@ -159,6 +159,7 @@ public class RagdollizationScript : MonoBehaviour {
             }
             b.mass = b.mass * 1000;
         }
+        //GetComponent<Rigidbody>().isKinematic = true;
 
         tag = "Untagged";
         gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
@@ -260,7 +261,7 @@ public class RagdollizationScript : MonoBehaviour {
             UnragdollizeBoss();
             GetComponent<NavMeshAgent>().enabled = true;
             GetComponent<NavMeshAgent>().SetDestination(GetComponent<BossCharacterControl>().target.position);
-            GetComponent<NavMeshAgent>().ResetPath();
+            //GetComponent<NavMeshAgent>().ResetPath();
         }
 
     }
@@ -322,9 +323,9 @@ public class RagdollizationScript : MonoBehaviour {
 
 
         GetComponent<Animator>().enabled = true;
-        GetComponent<NavMeshAgent>().enabled = false;
-        GetComponent<NavMeshAgent>().updateRotation = false;
-        GetComponent<NavMeshAgent>().updatePosition = true;
+        //GetComponent<NavMeshAgent>().enabled = false;
+        //GetComponent<NavMeshAgent>().updateRotation = false;
+        //GetComponent<NavMeshAgent>().updatePosition = true;
         foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
         {
             b.enableProjection = false;

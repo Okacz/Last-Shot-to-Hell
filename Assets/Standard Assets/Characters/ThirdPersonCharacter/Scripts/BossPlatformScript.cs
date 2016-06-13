@@ -24,12 +24,14 @@ public class BossPlatformScript : MonoBehaviour {
             foreach(Transform child in transform)
             {
                 child.GetComponent<Rigidbody>().isKinematic = false;
+                
             }
             //boss.GetComponent<NavMeshAgent>().enabled = true;
             //boss.GetComponent<Rigidbody>().isKinematic = true;
             boss.GetComponent<BossCharacterControl>().setStage(2);
             boss.GetComponent<RagdollizationScript>().Ragdollize();
             isDestroyed = true;
+            
         }
 
 

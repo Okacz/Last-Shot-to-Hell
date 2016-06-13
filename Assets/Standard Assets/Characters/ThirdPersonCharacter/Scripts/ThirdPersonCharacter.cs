@@ -43,6 +43,7 @@ using UnityEngine.UI;
         private bool isShotgunCD = false;
         bool moveable = true;
         public int revolverAmmo = 0;
+        public Transform kickingFoot;
         public int shotgunAmmo = 0;
         public int dynamiteAmmo = 0;
         public int healthTxt = 100;
@@ -61,11 +62,8 @@ using UnityEngine.UI;
 
         public enum Weapons
         {
-            Unarmed = 0,
-            Revolver = 1,
-            Rifle = 2,
-            Shotgun = 3,
-            Dynamite = 4
+            Revolver = 0,
+            Shotgun = 1
         };
         Weapons currentWeapon;
         public void UpdateAmmo()
@@ -98,8 +96,17 @@ using UnityEngine.UI;
         }
         public void endGettingUp()
         {
+            print("getting up...");
             GetComponent<Animator>().SetBool("Getting up", false);
-            m_Animator.SetInteger("Weapon", (int)currentWeapon);
+            if ((int)currentWeapon==0)
+            {
+                GetComponent<Animator>().SetInteger("Weapon", 1);
+            }
+            if ((int)currentWeapon == 1)
+            {
+                GetComponent<Animator>().SetInteger("Weapon", 3);
+            }
+            
         }
         
 		void Start()
@@ -151,8 +158,8 @@ using UnityEngine.UI;
                 next = a - 1;
 
             if (next < 0)
-                next = 4;
-            if (next > 4)
+                next = 1;
+            if (next > 1)
                 next = 0;
 
             return next;
@@ -163,7 +170,7 @@ using UnityEngine.UI;
             int gun = a;
             switch (gun)
             {
-                case 0: currentWeapon=Weapons.Unarmed; 
+                /*case 0: currentWeapon=Weapons.Unarmed; 
                     revolver.gameObject.SetActive(false);
                     rifle.gameObject.SetActive(false);
                     shotgun.gameObject.SetActive(false);
@@ -171,8 +178,8 @@ using UnityEngine.UI;
                     weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(false);
                     weaponPanels.transform.FindChild("ShotgunPane").gameObject.SetActive(false);
                     weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
-                    break;
-                case 1: currentWeapon = Weapons.Revolver;
+                    break;*/
+                case 0: currentWeapon = Weapons.Revolver;
                     revolver.gameObject.SetActive(true);
                     rifle.gameObject.SetActive(false);
                     shotgun.gameObject.SetActive(false);
@@ -180,9 +187,9 @@ using UnityEngine.UI;
                     m_Animator.SetInteger("Weapon", 1);
                     weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(true);
                     weaponPanels.transform.FindChild("ShotgunPanel").gameObject.SetActive(false);
-                    weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
+                    //weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
                     break;
-                case 2: currentWeapon = Weapons.Rifle;
+                /*case 2: currentWeapon = Weapons.Rifle;
                     revolver.gameObject.SetActive(false);
                     rifle.gameObject.SetActive(true);
                     shotgun.gameObject.SetActive(false);
@@ -191,8 +198,8 @@ using UnityEngine.UI;
                     weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(false);
                     weaponPanels.transform.FindChild("ShotgunPanel").gameObject.SetActive(false);
                     weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
-                    break;
-                case 3: currentWeapon = Weapons.Shotgun; 
+                    break;*/
+                case 1: currentWeapon = Weapons.Shotgun; 
                     revolver.gameObject.SetActive(false);
                     rifle.gameObject.SetActive(false);
                     shotgun.gameObject.SetActive(true);
@@ -200,9 +207,9 @@ using UnityEngine.UI;
                     m_Animator.SetInteger("Weapon", 3);
                     weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(false);
                     weaponPanels.transform.FindChild("ShotgunPanel").gameObject.SetActive(true);
-                    weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
+                    //weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(false);
                     break;
-                case 4: currentWeapon = Weapons.Dynamite;
+                /*case 4: currentWeapon = Weapons.Dynamite;
                     revolver.gameObject.SetActive(false);
                     rifle.gameObject.SetActive(false);
                     shotgun.gameObject.SetActive(false);
@@ -212,7 +219,7 @@ using UnityEngine.UI;
                     weaponPanels.transform.FindChild("ShotgunPanel").gameObject.SetActive(false);
                     weaponPanels.transform.FindChild("DynamitePanel").gameObject.SetActive(true);
                     
-                    break;
+                    break;*/
             }
                 
         }
@@ -276,10 +283,10 @@ using UnityEngine.UI;
                             0
                             );
         }
-        IEnumerator restrictMovement(float time)
+        public IEnumerator restrictMovement(float time)
         {
             moveable = false;
-            yield return new WaitForSeconds(time*10);
+            yield return new WaitForSeconds(time);
             moveable = true;
         }
         IEnumerator revolverShotCooldown()
@@ -363,9 +370,15 @@ using UnityEngine.UI;
                 Application.LoadLevel("scena1");
             }
             
+            if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punch"))
+            {
+
+                kickingFoot.GetComponent<BoxCollider>().enabled = false;
+            }
             if (Input.GetKey(KeyCode.E))
             {
                 m_Animator.SetBool("Punching", true);
+                kickingFoot.GetComponent<BoxCollider>().enabled = true;
                 if (!this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Punch"))
                 {
                     
@@ -380,8 +393,9 @@ using UnityEngine.UI;
                 m_Animator.SetBool("Punching", false);
 
             }
-            if(Input.GetButtonDown("Fire1")&&currentWeapon!=Weapons.Dynamite&&isRevolverCD==false)
+            if(Input.GetButtonDown("Fire1")&&isRevolverCD==false)
             {
+                print(revolverAmmo);
                 if((currentWeapon==Weapons.Shotgun&&shotgunAmmo>0)||(currentWeapon==Weapons.Revolver&&revolverAmmo>0))
                 {
 
@@ -397,10 +411,10 @@ using UnityEngine.UI;
                 }
                 }
             }
-            if (Input.GetButtonDown("Fire1")&&currentWeapon==Weapons.Dynamite&&dynamiteAmmo>0)
+            if (Input.GetButtonDown("Fire2")&&dynamiteAmmo>0)
             {
-                
-                    m_Animator.SetBool("Shooting", true);
+                print("ded");
+                    m_Animator.SetBool("Throwing", true);
 
                 
             }
@@ -439,6 +453,7 @@ using UnityEngine.UI;
 
             dynamiteAmmo--;
             UpdateAmmo();
+            m_Animator.SetBool("Throwing", false);
         }
     
     public void die()
