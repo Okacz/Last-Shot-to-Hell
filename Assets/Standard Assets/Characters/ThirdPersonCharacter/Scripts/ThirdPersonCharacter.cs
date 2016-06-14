@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading;
 
 [RequireComponent(typeof(Rigidbody))]
 	[RequireComponent(typeof(CapsuleCollider))]
@@ -115,7 +116,7 @@ using UnityEngine.UI;
             weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(true);
             //healthText.transform.FindChild("HealthText").gameObject.SetActive(true);
             revolverAmmo = 100;
-            shotgunAmmo = 10;
+            shotgunAmmo = 0;
             dynamiteAmmo = 0;
             UpdateAmmo();
             currentWeapon = Weapons.Revolver;
@@ -144,7 +145,12 @@ using UnityEngine.UI;
             //notdead();
             health = maxHealth;
             UpdateHealth();
+            revolverAmmo = 100;
+            shotgunAmmo = 10;
+            dynamiteAmmo = 2;
+            UpdateAmmo();
             transform.position = Spawnpoint;
+            GetComponent<RagdollizationScript>().GetUpMofo();
         }
         //----------------------------------------------------------//
 
@@ -461,7 +467,15 @@ using UnityEngine.UI;
         mainCameraPosition = (camera.transform.position - transform.FindChild("Cowboy").FindChild("CG").FindChild("Pelvis").FindChild("Spine").transform.position) / 3;
         //Time.timeScale = 0.2f;
         GetComponent<RagdollizationScript>().RagdollizePlayer();
+        StartCoroutine(Wait());
+        GetComponent<MenuScript>().GetMenuUp();
     }
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(3);
+    }
+
     public void Damage(int newHealth)
     {
         StartCoroutine(DamageEnum(newHealth));

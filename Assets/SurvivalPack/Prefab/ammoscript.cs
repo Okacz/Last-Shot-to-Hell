@@ -3,6 +3,10 @@ using System.Collections;
 
 public class ammoscript : MonoBehaviour {
 
+    public int revAmmo;
+    public int shotAmmo;
+    public int dynAmmo;
+
     // Use this for initialization
     void Start()
     {
@@ -21,9 +25,9 @@ public class ammoscript : MonoBehaviour {
         {
             GameObject hero = GameObject.FindGameObjectWithTag("Player");
             ThirdPersonCharacter skrypt = hero.GetComponent<ThirdPersonCharacter>();
-            skrypt.revolverAmmo += 28;
-            skrypt.shotgunAmmo += 2;
-            skrypt.dynamiteAmmo += 1;
+            skrypt.revolverAmmo += revAmmo;
+            skrypt.shotgunAmmo += shotAmmo;
+            skrypt.dynamiteAmmo += dynAmmo;
             skrypt.UpdateAmmo();
             gameObject.SetActive(false);
         }

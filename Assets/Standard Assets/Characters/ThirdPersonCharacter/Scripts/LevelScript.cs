@@ -12,8 +12,8 @@ public class LevelScript : MonoBehaviour {
     public GameObject Exit;
     public GameObject Trigger;
     public GameObject Player;
-    public GameObject AmmoPack;
-    public GameObject HealthPack;
+    /*public GameObject AmmoPack;
+    public GameObject HealthPack;*/
     CutsceneScript cutscene;
 
     int TimeActive;
@@ -173,8 +173,8 @@ public class LevelScript : MonoBehaviour {
             if (b == true)
             {
                 Exit.SetActive(false);
-                AmmoPack.SetActive(true);
-                HealthPack.SetActive(true);
+                /*AmmoPack.SetActive(true);
+                HealthPack.SetActive(true);*/
                 isFinished = true;
             }
             

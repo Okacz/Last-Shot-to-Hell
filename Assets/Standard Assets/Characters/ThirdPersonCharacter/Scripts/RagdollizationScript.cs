@@ -2,6 +2,11 @@
 using System.Collections;
 
 public class RagdollizationScript : MonoBehaviour {
+    public void GetUpMofo()
+    {
+        StartCoroutine(GetUpPlayer());
+    }
+
     public void RagdollizePlayer()
     {
         foreach (Rigidbody b in GetComponentsInChildren<Rigidbody>())
@@ -276,7 +281,8 @@ public class RagdollizationScript : MonoBehaviour {
         else
         {
             yield return new WaitForSeconds(1.0f);
-            Application.LoadLevel("main_menu");
+
+            //Application.LoadLevel("main_menu");
         }
     }
     public void UnragdollizePlayer()

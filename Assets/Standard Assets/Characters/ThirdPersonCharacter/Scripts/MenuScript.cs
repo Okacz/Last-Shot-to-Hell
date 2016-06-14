@@ -35,6 +35,13 @@ public class MenuScript : MonoBehaviour {
             }
         }
 	}
+    public void GetMenuUp()
+    {
+        Menu.gameObject.SetActive(true);
+        Time.timeScale = 0;
+        isMenuUp = true;
+        Camera.GetComponent<AudioSource>().Pause();
+    }
     public void ToMainMenu()
     {
         Application.LoadLevel("main_menu");
@@ -43,5 +50,15 @@ public class MenuScript : MonoBehaviour {
     {
         print("dedededed");
         Application.Quit();
+    }
+    public void Continue()
+    {
+        GameObject playa = GameObject.Find("PlayerCharacter");
+        ThirdPersonCharacter skrypt = playa.GetComponent<ThirdPersonCharacter>();
+        skrypt.respawn();
+        Menu.gameObject.SetActive(false);
+        Time.timeScale = 1;
+        isMenuUp = false;
+        Camera.GetComponent<AudioSource>().UnPause();
     }
 }
