@@ -14,7 +14,7 @@ public class TerrainScript : MonoBehaviour {
 	}
     void OnParticleCollision(GameObject other)
     {
-        ParticleCollisionEvent[] collisionEvents=new ParticleCollisionEvent[16];
+        ParticleCollisionEvent[] collisionEvents=new ParticleCollisionEvent[64];
         other.GetComponent<ParticleSystem>().GetCollisionEvents(this.gameObject, collisionEvents);
         int a=other.GetComponent<ParticleSystem>().GetSafeCollisionEventSize();
         if (collisionEvents.Length < a)

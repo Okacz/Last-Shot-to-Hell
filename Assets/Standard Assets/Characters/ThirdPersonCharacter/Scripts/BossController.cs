@@ -70,6 +70,7 @@ public class BossController : MonoBehaviour {
             if(!dead&&HP<=0)
             {
                 
+                StartCoroutine(WaitForEnd(2));
                 GetComponent<RagdollizationScript>().Ragdollize(a, 4);
                 dead = true;
                 
@@ -121,6 +122,13 @@ public class BossController : MonoBehaviour {
             b.isKinematic = true;
             b.freezeRotation = true;
         }
+        print("stop");
+    }
+    IEnumerator WaitForEnd(float duration)
+    {
+        print("start");
+        yield return new WaitForSeconds(duration);
+        Application.LoadLevel("Trailer");
         print("stop");
     }
     

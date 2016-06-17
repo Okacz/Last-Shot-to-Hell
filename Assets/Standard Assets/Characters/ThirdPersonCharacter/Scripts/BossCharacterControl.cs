@@ -126,7 +126,8 @@ using UnityEngine;
                     {
                         print("numer 1");
                         //agent.ResetPath();
-                        agent.SetDestination(target.position);
+                        //agent.SetDestination(target.position);
+                        //agent.destination = target.position;
                         pickaxe.gameObject.SetActive(true);
                         pickaxe.GetComponent<BoxCollider>().enabled = true;
                         print("numer 2");
@@ -144,12 +145,28 @@ using UnityEngine;
                             print("numer 3");
                         }
                         else
+                            if (agent.remainingDistance <= 1.8&&agent.remainingDistance>0.4f)
                         {
                             agent.speed = 2;
                             GetComponent<Animator>().SetFloat("Forward", 0);
                             GetComponent<Animator>().SetBool("IsShooting", true);
                             print("numer 4"+ agent.remainingDistance);
                         }
+                            else
+                                if (agent.remainingDistance <0.4f)
+                                {
+                                    NavMeshHit hit;
+                                    if(NavMesh.SamplePosition(transform.position, out hit, 1.0f, NavMesh.AllAreas));
+                                    {
+
+                                    transform.position = hit.position;
+                                    }
+                                    agent.SetDestination(target.position);
+                                    agent.speed = 2;
+                                    GetComponent<Animator>().SetFloat("Forward", 0);
+                                    GetComponent<Animator>().SetBool("IsShooting", false);
+                                    print("numer 5" + agent.remainingDistance);
+                                }
                     }
 
                 }

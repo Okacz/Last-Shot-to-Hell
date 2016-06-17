@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Threading;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
 	[RequireComponent(typeof(CapsuleCollider))]
@@ -17,6 +18,7 @@ using System.Threading;
 		[SerializeField] float m_AnimSpeedMultiplier = 1f;
 		[SerializeField] float m_GroundCheckDistance = 0.1f;
 
+        public int spawnnumber = 0;
 		Rigidbody m_Rigidbody;
 		Animator m_Animator;
 		bool m_IsGrounded;
@@ -49,7 +51,7 @@ using System.Threading;
         public int dynamiteAmmo = 0;
         public int healthTxt = 100;
         public Vector3 Spawnpoint;
-
+        Transform Boss;
 
         public GameObject weaponPanels;
         public GameObject healthText;
@@ -61,6 +63,7 @@ using System.Threading;
         public Transform litDynamite;
         public Camera camera;
 
+        List<Transform> Checkpointy = new List<Transform>();
         public enum Weapons
         {
             Revolver = 0,
@@ -112,16 +115,16 @@ using System.Threading;
         
 		void Start()
 		{
+            //PlayerPrefs.DeleteAll();
+            
             Spawnpoint = transform.position;
             weaponPanels.transform.FindChild("RevolverPanel").gameObject.SetActive(true);
             //healthText.transform.FindChild("HealthText").gameObject.SetActive(true);
-            revolverAmmo = 100;
-            shotgunAmmo = 0;
-            dynamiteAmmo = 0;
+            
             UpdateAmmo();
             currentWeapon = Weapons.Revolver;
-            mainCameraPosition = camera.transform.position - transform.position;
             mainCameraRotation = camera.transform.rotation;
+            //mainCameraPosition = camera.transform.position - transform.position;
             rifle.gameObject.SetActive(false);
             shotgun.gameObject.SetActive(false);
             dynamite.gameObject.SetActive(false);
@@ -134,7 +137,18 @@ using System.Threading;
 			m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			m_OrigGroundCheckDistance = m_GroundCheckDistance;
             health = maxHealth;
-            UpdateHealth();
+            Boss = GameObject.Find("Brute").transform;
+            UpdateHealth();/*
+            if (PlayerPrefs.HasKey("x"))
+            {
+                float spawnx = PlayerPrefs.GetFloat("x");
+                float spawny = PlayerPrefs.GetFloat("y");
+                float spawnz = PlayerPrefs.GetFloat("z");
+                print(spawnx + " " + spawny + " " + spawnz);
+                transform.position = new Vector3(spawnx, spawny, spawnz);
+                mainCameraPosition = transform.position;
+                GetComponent<CameraControl>().setPosition(spawnx, spawny, spawnz);
+            }*/
             
         }
         
@@ -143,14 +157,29 @@ using System.Threading;
         public void respawn()
         {
             //notdead();
-            health = maxHealth;
+            if(spawnnumber==0)
+            {
+
+            Application.LoadLevel(Application.loadedLevel);
+            }
+            if(spawnnumber==1)
+            {
+
+            Application.LoadLevel("scena2");
+            }
+            if(spawnnumber==2)
+            {
+
+            Application.LoadLevel("scena3");
+            }
+            /*health = maxHealth;
             UpdateHealth();
             revolverAmmo = 100;
             shotgunAmmo = 10;
             dynamiteAmmo = 2;
             UpdateAmmo();
             transform.position = Spawnpoint;
-            GetComponent<RagdollizationScript>().GetUpMofo();
+            GetComponent<RagdollizationScript>().GetUpMofo();*/
         }
         //----------------------------------------------------------//
 
@@ -329,7 +358,10 @@ using System.Threading;
         }
         void Update()
         {
-            
+            if(Boss.GetComponent<BossController>().HP==0)
+            {
+                
+            }
             LookAtCursor(); 
             
             if (this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1).IsName("Bang (revolver)"))
@@ -464,7 +496,7 @@ using System.Threading;
     
     public void die()
     {
-        mainCameraPosition = (camera.transform.position - transform.FindChild("Cowboy").FindChild("CG").FindChild("Pelvis").FindChild("Spine").transform.position) / 3;
+        //mainCameraPosition = (camera.transform.position - transform.FindChild("Cowboy").FindChild("CG").FindChild("Pelvis").FindChild("Spine").transform.position) / 3;
         //Time.timeScale = 0.2f;
         GetComponent<RagdollizationScript>().RagdollizePlayer();
         StartCoroutine(Wait());

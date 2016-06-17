@@ -28,6 +28,10 @@ public class DynamiteScript : MonoBehaviour {
                 tempStorage[1]=1000000;
                 col.gameObject.GetComponent<RagdollizationScript>().Ragdollize(transform.position, 10000f);
             }
+            if(col.transform.name.StartsWith("BossLog"))
+            {
+                col.gameObject.GetComponent<PillarScript>().Damage();
+            }
         }
         print("cjk cd");
         

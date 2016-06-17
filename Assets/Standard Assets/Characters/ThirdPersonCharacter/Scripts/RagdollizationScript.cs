@@ -23,7 +23,7 @@ public class RagdollizationScript : MonoBehaviour {
         GetComponent<NavMeshObstacle>().enabled = false;
         GetComponent<ThirdPersonUserControl>().enabled = false;
         GetComponent<Animator>().enabled = false;
-        
+        GetComponent<Rigidbody>().isKinematic = true;
         StartCoroutine(GetUpPlayer());
         
     }
@@ -59,6 +59,7 @@ public class RagdollizationScript : MonoBehaviour {
             }
             
         }
+        GetComponent<Rigidbody>().isKinematic = true;
         StartCoroutine(GetUpPlayer());
 
     }
@@ -264,8 +265,9 @@ public class RagdollizationScript : MonoBehaviour {
         if (GetComponent<BossController>().HP > 0)
         {
             UnragdollizeBoss();
-            GetComponent<NavMeshAgent>().enabled = true;
+            GetComponent<NavMeshAgent>().ResetPath();
             GetComponent<NavMeshAgent>().SetDestination(GetComponent<BossCharacterControl>().target.position);
+            GetComponent<NavMeshAgent>().enabled = true;
             //GetComponent<NavMeshAgent>().ResetPath();
         }
 
@@ -329,9 +331,9 @@ public class RagdollizationScript : MonoBehaviour {
 
 
         GetComponent<Animator>().enabled = true;
-        //GetComponent<NavMeshAgent>().enabled = false;
-        //GetComponent<NavMeshAgent>().updateRotation = false;
-        //GetComponent<NavMeshAgent>().updatePosition = true;
+        GetComponent<NavMeshAgent>().enabled = false;
+        GetComponent<NavMeshAgent>().updateRotation = false;
+        GetComponent<NavMeshAgent>().updatePosition = true;
         foreach (CharacterJoint b in GetComponentsInChildren<CharacterJoint>())
         {
             b.enableProjection = false;
@@ -356,7 +358,7 @@ public class RagdollizationScript : MonoBehaviour {
         {
             b.mass = b.mass / 1000;
             b.freezeRotation = true;
-            b.isKinematic = true;
+            //b.isKinematic = true;
             if (b.name == "Spine1")
             {
 

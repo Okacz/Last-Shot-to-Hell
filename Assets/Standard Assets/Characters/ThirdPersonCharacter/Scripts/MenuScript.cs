@@ -59,6 +59,8 @@ public class MenuScript : MonoBehaviour {
         Menu.gameObject.SetActive(false);
         Time.timeScale = 1;
         isMenuUp = false;
-        Camera.GetComponent<AudioSource>().UnPause();
+        Camera.GetComponent<AudioSource>().Stop();
+        Camera.GetComponent<AudioSource>().Play();
+        
     }
 }
