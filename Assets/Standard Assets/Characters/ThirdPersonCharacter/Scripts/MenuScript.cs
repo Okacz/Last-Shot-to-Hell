@@ -5,6 +5,7 @@ public class MenuScript : MonoBehaviour {
 
     bool isMenuUp;
     public Transform Menu;
+    public Transform DeadText;
     Transform Camera;
     
     float HP = 100;
@@ -13,6 +14,7 @@ public class MenuScript : MonoBehaviour {
     void Start () {
         isMenuUp = false;
         Menu.gameObject.SetActive(false);
+        DeadText.gameObject.SetActive(false);
         Camera = GameObject.Find("Main Camera").transform;
         GameObject playa = GameObject.Find("PlayerCharacter");
         ThirdPersonCharacter skrypt = playa.GetComponent<ThirdPersonCharacter>();
@@ -51,6 +53,13 @@ public class MenuScript : MonoBehaviour {
 	}
     public void GetMenuUp()
     {
+        GameObject playa = GameObject.Find("PlayerCharacter");
+        ThirdPersonCharacter skrypt = playa.GetComponent<ThirdPersonCharacter>();
+        HP = skrypt.health;
+        if (HP <= 0)
+        {
+            DeadText.gameObject.SetActive(true);
+        }
             Menu.gameObject.SetActive(true);
             Time.timeScale = 0;
             isMenuUp = true;
@@ -71,6 +80,7 @@ public class MenuScript : MonoBehaviour {
         GameObject playa = GameObject.Find("PlayerCharacter");
         ThirdPersonCharacter skrypt = playa.GetComponent<ThirdPersonCharacter>();
         Time.timeScale = 1;
+        DeadText.gameObject.SetActive(false);
         skrypt.respawn();
         /*Menu.gameObject.SetActive(false);
         isMenuUp = false;
