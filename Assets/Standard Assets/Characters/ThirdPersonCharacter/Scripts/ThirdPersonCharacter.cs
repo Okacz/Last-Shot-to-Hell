@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Threading;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 	[RequireComponent(typeof(CapsuleCollider))]
@@ -159,28 +160,39 @@ using System.Collections.Generic;
             //notdead();
             if(spawnnumber==0)
             {
+                SceneManager.LoadScene("scena1");
 
-            Application.LoadLevel(Application.loadedLevel);
             }
             if(spawnnumber==1)
             {
 
-            Application.LoadLevel("scena2");
+                SceneManager.LoadScene("scena2");
             }
             if(spawnnumber==2)
             {
 
-            Application.LoadLevel("scena3");
+                SceneManager.LoadScene("scena3");
             }
-            /*health = maxHealth;
-            UpdateHealth();
-            revolverAmmo = 100;
-            shotgunAmmo = 10;
-            dynamiteAmmo = 2;
-            UpdateAmmo();
-            transform.position = Spawnpoint;
-            GetComponent<RagdollizationScript>().GetUpMofo();*/
-        }
+            if (spawnnumber == 3)
+            {
+
+                SceneManager.LoadScene("scena4");
+            }
+            if (spawnnumber == 4)
+            {
+
+                SceneManager.LoadScene("scena5");
+            }
+
+        /*health = maxHealth;
+        UpdateHealth();
+        revolverAmmo = 100;
+        shotgunAmmo = 10;
+        dynamiteAmmo = 2;
+        UpdateAmmo();
+        transform.position = Spawnpoint;
+        GetComponent<RagdollizationScript>().GetUpMofo();*/
+    }
         //----------------------------------------------------------//
 
         int GetEnumValue(bool dir)
@@ -398,7 +410,7 @@ using System.Collections.Generic;
                 }
 
             }
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.B))
             {
 
                 PortToBoss();
@@ -500,6 +512,7 @@ using System.Collections.Generic;
         //Time.timeScale = 0.2f;
         GetComponent<RagdollizationScript>().RagdollizePlayer();
         StartCoroutine(Wait());
+
         GetComponent<MenuScript>().GetMenuUp();
     }
 

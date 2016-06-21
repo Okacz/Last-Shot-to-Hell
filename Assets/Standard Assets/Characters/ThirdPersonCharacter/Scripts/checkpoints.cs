@@ -10,6 +10,7 @@ public class checkpoints : MonoBehaviour {
     {
         if (a.tag == "Player")
         {
+
             GameObject playa = GameObject.Find("PlayerCharacter");
             ThirdPersonCharacter skrypt = playa.GetComponent<ThirdPersonCharacter>();
             skrypt.Spawnpoint = Spawn.transform.position;
